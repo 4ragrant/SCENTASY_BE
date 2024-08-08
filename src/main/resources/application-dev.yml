@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: application-dev
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    url: ${RDS_URL}
+    username: ${RDS_USR}
+    password: ${RDS_PWD}
+    driver-class-name: org.mariadb.jdbc.Driver
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    s3:
+      bucket: ${BUCKET_NAME}
+    credentials:
+      access-key: ${ACCESS_KEY}
+      secret-key: ${SECRET_KEY}
+    stack:
+      auto: false

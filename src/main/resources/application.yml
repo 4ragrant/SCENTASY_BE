@@ -1,0 +1,27 @@
+spring:
+  profiles:
+    active: local
+
+  output:
+    ansi:
+      enabled: always #?? ??
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 60m
+
+logging:
+  level:
+    root: INFO
+    org:
+      springframework:
+        web:
+          servlet:
+            handler:
+              SimpleUrlHandlerMapping: WARN
+      springframework.security: DEBUG
+
+    com:
+      fasterxml.jackson: DEBUG
