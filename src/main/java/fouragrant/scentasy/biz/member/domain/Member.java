@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fouragrant.scentasy.biz.member.dto.MemberDtoReq;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.post.domain.Post;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
@@ -14,15 +15,17 @@ import jakarta.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Getter
+@Setter
+@AllArgsConstructor
+@Builder
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
@@ -70,5 +73,14 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     @JsonIgnore
     private List<Perfume> perfumeList = new ArrayList<>();
+
+
+    public static Member createMember(MemberDtoReq.SignUpDto signUpDto, String password) {
+        return Member.builder()
+                .email(signUpDto.getEmail())
+                .password(password)
+                .nickname(signUpDto.getNickname())
+                .build();
+    }
 
 }
