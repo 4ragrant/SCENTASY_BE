@@ -1,6 +1,6 @@
 package fouragrant.scentasy.biz.member.domain;
 
-import fouragrant.scentasy.biz.member.dto.MemberDtoReq;
+import fouragrant.scentasy.biz.member.dto.MemberReqDto;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,6 +24,9 @@ public class ExtraInfo extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* ------------ Information Column ------------ */
     /* -------------------------------------------- */
+    @Column(name = "member_nickname")
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
     @Column
     private Season season;
@@ -43,5 +46,6 @@ public class ExtraInfo extends BaseTimeEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id", unique = true, nullable = false)
     private Member member;
+
 
 }

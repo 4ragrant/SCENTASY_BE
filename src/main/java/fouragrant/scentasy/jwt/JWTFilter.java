@@ -1,88 +1,50 @@
 package fouragrant.scentasy.jwt;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 
-// 요청에 대해서 한 번만 동작하는 필터
+
+@RequiredArgsConstructor
 public class JWTFilter extends OncePerRequestFilter {
-    private final JWTUtil jwtUtil;
 
-    public JWTFilter(JWTUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String BEARER_PREFIX = "Bearer ";
 
+    private final TokenProvider tokenProvider;
+
+    // 실제 필터링 로직은 doFilterInternal 에 들어감
+    // JWT 토큰의 인증 정보를 현재 쓰레드의 SecurityContext 에 저장하는 역할 수행
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException, ServletException {
 
-        // 헤더에서 Authorization 에 담긴 토큰을 꺼냄
-        String accessToken = jwtUtil.resolveToken(request);
+        // 1. Request Header 에서 토큰을 꺼냄
+        String jwt = resolveToken(request);
 
-// 토큰이 없다면 다음 필터로 넘김
-        if (accessToken == null) {
-
-            filterChain.doFilter(request, response);
-
-            return;
+        // 2. validateToken 으로 토큰 유효성 검사
+        // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
+        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            Authentication authentication = tokenProvider.getAuthentication(jwt);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
-
-        // Bearer 검증 없으면 다음 필터
-        if (!accessToken.substring(0, "BEARER ".length()).equalsIgnoreCase("BEARER ")) {
-            filterChain.doFilter(request, response);
-            return;
-        } else {
-            accessToken = accessToken.split(" ")[1].trim();
-        }
-
-// 토큰 만료 여부 확인, 만료시 다음 필터로 넘기지 않음
-        try {
-            jwtUtil.isExpired(accessToken);
-        } catch (ExpiredJwtException e) {
-
-            //response body
-            PrintWriter writer = response.getWriter();
-            writer.print("access token expired");
-
-            //response status code
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
-        }
-
-// 토큰이 access인지 확인 (발급시 페이로드에 명시)
-        // 이 프로젝트에서는 패스
-//        String category = jwtUtil.getCategory(accessToken);
-//
-//        if (!category.equals("access")) {
-//
-//            //response body
-//            PrintWriter writer = response.getWriter();
-//            writer.print("invalid access token");
-//
-//            //response status code
-//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//            return;
-//        }
-
-// username, role 값을 획득
-        String username = jwtUtil.getUsername(accessToken);
-        String role = jwtUtil.getRole(accessToken);
-
-        UserEntity userEntity = UserEntity.builder()
-                .phone(username)
-                .build();
-        userEntity.setPhone(username);
-        userEntity.setRole(role);
-        CustomUserDetails customUserDetails = new CustomUserDetails(userEntity);
-
-        Authentication authToken = new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authToken);
 
         filterChain.doFilter(request, response);
+    }
+
+    // Request Header 에서 토큰 정보를 꺼내오기
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
+            return bearerToken.split(" ")[1].trim();
+        }
+        return null;
     }
 }

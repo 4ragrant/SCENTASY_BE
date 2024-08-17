@@ -1,16 +1,10 @@
 package fouragrant.scentasy.biz.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fouragrant.scentasy.biz.member.dto.MemberDtoReq;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.post.domain.Post;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -40,8 +34,6 @@ public class Member extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* ------------ Information Column ------------ */
     /* -------------------------------------------- */
-    @Column(name = "member_nickname")
-    private String nickname;
 
     @Column(name = "member_password")
     private String password;
@@ -49,6 +41,9 @@ public class Member extends BaseTimeEntity {
     @Email
     @Column(name = "member_email")
     private String email;
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -75,12 +70,11 @@ public class Member extends BaseTimeEntity {
     private List<Perfume> perfumeList = new ArrayList<>();
 
 
-    public static Member createMember(MemberDtoReq.SignUpDto signUpDto, String password) {
-        return Member.builder()
-                .email(signUpDto.getEmail())
-                .password(password)
-                .nickname(signUpDto.getNickname())
-                .build();
+    @Builder
+    public Member(String email, String password, Authority authority) {
+        this.email = email;
+        this.password = password;
+        this.authority = authority;
     }
 
 }
