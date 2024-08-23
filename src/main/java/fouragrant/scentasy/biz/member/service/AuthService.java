@@ -10,6 +10,7 @@ import fouragrant.scentasy.biz.member.repository.MemberRepository;
 import fouragrant.scentasy.biz.member.repository.RefreshTokenRepository;
 import fouragrant.scentasy.common.exception.CommonException;
 import fouragrant.scentasy.common.exception.ErrorCode;
+import fouragrant.scentasy.jwt.JwtBlacklist;
 import fouragrant.scentasy.jwt.TokenProvider;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtBlacklist jwtBlacklist;
 
     @Transactional
     public MemberResDto signup(MemberReqDto memberReqDto) {
@@ -100,5 +102,19 @@ public class AuthService {
 
         // 토큰 발급
         return tokenDto;
+    }
+
+    public String logout(TokenReqDto tokenRequestDto) {
+        // TokenReqDto에서 Access Token 추출
+        String accessToken = tokenRequestDto.getAccessToken();
+
+        // "Bearer " 문자열 제거 (필요한 경우)
+        String pureToken = accessToken.replace("Bearer ", "");
+
+        // 토큰을 블랙리스트에 추가
+        jwtBlacklist.addTokenToBlacklist(pureToken);
+
+        // 로그아웃 성공 메시지 반환
+        return "Logged out successfully.";
     }
 }

@@ -2,6 +2,7 @@ package fouragrant.scentasy.config;
 
 import fouragrant.scentasy.jwt.JWTAccessDeniedHandler;
 import fouragrant.scentasy.jwt.JWTAuthenticationEntryPoint;
+import fouragrant.scentasy.jwt.JwtBlacklist;
 import fouragrant.scentasy.jwt.TokenProvider;
 import org.springframework.web.filter.CorsFilter;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class SecurityConfig {
     private final CorsFilter corsFilter;
     private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JWTAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JwtBlacklist jwtBlacklist;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -61,7 +63,7 @@ public class SecurityConfig {
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
-                .apply(new JWTSecurityConfig(tokenProvider));
+                .apply(new JWTSecurityConfig(tokenProvider, jwtBlacklist));
 
         return http.build();
     }
