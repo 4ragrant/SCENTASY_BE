@@ -1,16 +1,19 @@
 package fouragrant.scentasy.biz.member.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import fouragrant.scentasy.biz.member.dto.MemberReqDto;
+import fouragrant.scentasy.common.dto.BaseTimeEntity;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
-public class extraInfo {
+@Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@Builder
+@DynamicInsert
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ExtraInfo extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* -------------- Default Column -------------- */
     /* -------------------------------------------- */
@@ -21,6 +24,9 @@ public class extraInfo {
     /* -------------------------------------------- */
     /* ------------ Information Column ------------ */
     /* -------------------------------------------- */
+    @Column(name = "member_nickname")
+    private String nickname;
+
     @Enumerated(EnumType.STRING)
     @Column
     private Season season;
@@ -29,6 +35,9 @@ public class extraInfo {
     @Column
     private Gender gender;
 
+    @Enumerated(EnumType.STRING)
+    @Column
+    private Age age;
 
 
     /* -------------------------------------------- */
@@ -37,4 +46,6 @@ public class extraInfo {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id", unique = true, nullable = false)
     private Member member;
+
+
 }
