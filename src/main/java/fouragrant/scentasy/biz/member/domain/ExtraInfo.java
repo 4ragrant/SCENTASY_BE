@@ -1,5 +1,6 @@
 package fouragrant.scentasy.biz.member.domain;
 
+import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.dto.MemberReqDto;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -47,5 +48,24 @@ public class ExtraInfo extends BaseTimeEntity {
     @JoinColumn(name = "member_id", unique = true, nullable = false)
     private Member member;
 
+    // ExtraInfoReqDto를 ExtraInfo로 변환
+    public static ExtraInfo fromDto(ExtraInfoReqDto dto, Member member) {
+        return ExtraInfo.builder()
+                .nickname(dto.getNickname())
+                .season(dto.getSeason())
+                .gender(dto.getGender())
+                .age(dto.getAge())
+                .member(member)
+                .build();
+    }
 
+    // ExtraInfo를 ExtraInfoDto로 변환
+    public ExtraInfoReqDto toDto() {
+        return ExtraInfoReqDto.builder()
+                .nickname(this.nickname)
+                .season(this.season)
+                .gender(this.gender)
+                .age(this.age)
+                .build();
+    }
 }
