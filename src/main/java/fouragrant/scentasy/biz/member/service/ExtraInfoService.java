@@ -17,4 +17,8 @@ public class ExtraInfoService {
         return repository.save(extraInfo);
     }
 
+    public boolean checkNickname(String nickname) {
+        return repository.existsByNickname(nickname);
+    }
+
 }

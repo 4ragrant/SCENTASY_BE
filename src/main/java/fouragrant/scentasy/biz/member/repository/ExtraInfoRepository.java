@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ExtraInfoRepository extends JpaRepository<ExtraInfo, Long> {
+    boolean existsByNickname(String nickname);
 }
