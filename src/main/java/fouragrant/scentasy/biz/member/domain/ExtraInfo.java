@@ -1,11 +1,12 @@
 package fouragrant.scentasy.biz.member.domain;
 
 import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
-import fouragrant.scentasy.biz.member.dto.MemberReqDto;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,6 +23,7 @@ public class ExtraInfo extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "extrainfo_id")
     private Long extrainfoId;
+
     /* -------------------------------------------- */
     /* ------------ Information Column ------------ */
     /* -------------------------------------------- */
@@ -40,13 +42,24 @@ public class ExtraInfo extends BaseTimeEntity {
     @Column
     private Age age;
 
-
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
     /* -------------------------------------------- */
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "member_id", unique = true, nullable = false)
     private Member member;
+
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "liked_scents", joinColumns = @JoinColumn(name = "extrainfo_id"))
+    @Column(name = "scent")
+    private List<Scent> likedScents;
+
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "disliked_scents", joinColumns = @JoinColumn(name = "extrainfo_id"))
+    @Column(name = "scent")
+    private List<Scent> dislikedScents;
 
     // ExtraInfoReqDto를 ExtraInfo로 변환
     public static ExtraInfo fromDto(ExtraInfoReqDto dto, Member member) {
@@ -55,6 +68,8 @@ public class ExtraInfo extends BaseTimeEntity {
                 .season(dto.getSeason())
                 .gender(dto.getGender())
                 .age(dto.getAge())
+                .likedScents(dto.getLikedScents())
+                .dislikedScents(dto.getDislikedScents())
                 .member(member)
                 .build();
     }
@@ -66,6 +81,8 @@ public class ExtraInfo extends BaseTimeEntity {
                 .season(this.season)
                 .gender(this.gender)
                 .age(this.age)
+                .likedScents(this.likedScents)
+                .dislikedScents(this.dislikedScents)
                 .build();
     }
 }

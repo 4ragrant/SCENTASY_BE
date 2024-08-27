@@ -9,24 +9,20 @@ import fouragrant.scentasy.biz.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth/extrainfo")
+@RequestMapping("/auth")
 public class ExtraInfoController {
     private final ExtraInfoService extraInfoService;
     private final MemberService memberService;
 
-    @GetMapping
-    public String test() {
-        return "success";
-    }
-
-    @PostMapping
-    public ResponseEntity<ExtraInfoResDto> createExtraInfo(@RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
+    @PostMapping("/extra-info")
+    public ResponseEntity<ExtraInfoResDto> createExtraInfo(@Validated @RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
         Member member = memberService.findByEmail(email);
         if(member == null) {
             return ResponseEntity.badRequest().body(new ExtraInfoResDto<>("Member not found", null));
