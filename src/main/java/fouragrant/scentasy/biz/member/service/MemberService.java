@@ -1,5 +1,6 @@
 package fouragrant.scentasy.biz.member.service;
 
+import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.dto.MemberResDto;
 import fouragrant.scentasy.biz.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
@@ -24,4 +25,9 @@ public class MemberService {
                 .map(MemberResDto::of)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
+
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email).orElse(null);
+    }
+
 }
