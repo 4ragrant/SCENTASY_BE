@@ -21,6 +21,13 @@ public class ExtraInfoController {
     private final ExtraInfoService extraInfoService;
     private final MemberService memberService;
 
+    // 닉네임 중복 확인
+    @GetMapping("/isExist/{nickname}")
+    public ResponseEntity<Boolean> checkNickname(@PathVariable String nickname)
+    {
+        return ResponseEntity.ok(extraInfoService.checkNickname(nickname));
+    }
+
     @PostMapping("/extra-info")
     public ResponseEntity<ExtraInfoResDto> createExtraInfo(@Validated @RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
         Member member = memberService.findByEmail(email);
