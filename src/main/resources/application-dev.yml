@@ -27,3 +27,7 @@ cloud:
       secret-key: ${SECRET_KEY}
     stack:
       auto: false
+
+jwt:
+  secret:
+    key: ${JWT_KEY}
