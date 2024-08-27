@@ -1,7 +1,10 @@
 package fouragrant.scentasy.config;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @OpenAPIDefinition(
@@ -13,8 +16,10 @@ import org.springframework.context.annotation.Configuration;
 )
 @Configuration
 public class SwaggerConfig {
-
-    private Info apiInfo() {
-        return new Info().title("BomMeong API").description("BomMeong API Docs with Swagger UI").version("1.0.0");
+    @Bean
+    public OpenAPI customOpenAPI() {
+        return new OpenAPI()
+                .addServersItem(new Server().url("http://43.201.210.211:8080").description("Dev Server"))
+                .addServersItem(new Server().url("http://localhost:8080").description("Local Server"));
     }
 }
