@@ -54,7 +54,8 @@ public class AuthController {
     @Operation(summary = "로그아웃", description = "로그아웃을 위한 메소드")
     @ApiResponse(content = @Content(schema = @Schema(implementation = Response.class)))
     @PostMapping("/logout")
-    public Response<String> logout(@RequestBody TokenReqDto tokenRequestDto) {
-        return Response.createSuccess("0000", authService.logout(tokenRequestDto));
+    public ResponseEntity<?> logout(@RequestBody TokenReqDto tokenRequestDto) {
+        authService.logout(tokenRequestDto);
+        return ResponseEntity.ok(Response.createSuccessWithNoData("0000"));
     }
 }
