@@ -10,10 +10,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,9 +28,14 @@ public class AuthController {
     @ApiResponse(content = @Content(schema = @Schema(implementation = Response.class)))
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<MemberResDto> signup(@RequestBody MemberReqDto memberReqDto) {
+    public ResponseEntity<MemberResDto> signup(@RequestBody @Valid MemberReqDto memberReqDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // 에러 처리
+        }
+
         return ResponseEntity.ok(authService.signup(memberReqDto));
     }
+
     @Operation(summary = "로그인", description = "로그인을 위한 메소드")
     @ApiResponse(content = @Content(schema = @Schema(implementation = Response.class)))
     @PostMapping("/login")
@@ -36,6 +43,7 @@ public class AuthController {
     public ResponseEntity<TokenDto> login(@RequestBody MemberReqDto memberDtoRes) {
         return ResponseEntity.ok(authService.login(memberDtoRes));
     }
+
     @Operation(summary = "토큰재발급", description = "토큰재발급을 위한 메소드")
     @ApiResponse(content = @Content(schema = @Schema(implementation = Response.class)))
     @PostMapping("/reissue")
@@ -43,6 +51,7 @@ public class AuthController {
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenReqDto tokenRequestDto) {
         return ResponseEntity.ok(authService.reissue(tokenRequestDto));
     }
+
     @Operation(summary = "로그아웃", description = "로그아웃을 위한 메소드")
     @ApiResponse(content = @Content(schema = @Schema(implementation = Response.class)))
     @PostMapping("/logout")
