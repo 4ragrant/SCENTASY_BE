@@ -4,8 +4,10 @@ import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
+import fouragrant.scentasy.biz.member.dto.TokenDto;
 import fouragrant.scentasy.biz.member.service.ExtraInfoService;
 import fouragrant.scentasy.biz.member.service.MemberService;
+import fouragrant.scentasy.common.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +24,16 @@ public class ExtraInfoController {
     private final MemberService memberService;
 
     // 닉네임 중복 확인
-    @GetMapping("/isExist/{nickname}")
-    public ResponseEntity<Boolean> checkNickname(@PathVariable String nickname)
+    @GetMapping("/exists/{nickname}")
+    public ResponseEntity<?> checkNickname(@PathVariable String nickname)
     {
-        return ResponseEntity.ok(extraInfoService.checkNickname(nickname));
+        Boolean isExists = extraInfoService.checkNickname(nickname);
+        return ResponseEntity.ok(Response.createSuccess("0000", isExists));
     }
 
+    // 추가정보 저장
     @PostMapping("/extra-info")
-    public ResponseEntity<ExtraInfoResDto> createExtraInfo(@Validated @RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
+    public ResponseEntity<?> createExtraInfo(@Validated @RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
         Member member = memberService.findByEmail(email);
         if(member == null) {
             return ResponseEntity.badRequest().body(new ExtraInfoResDto<>("Member not found", null));
@@ -38,6 +42,6 @@ public class ExtraInfoController {
         ExtraInfo createdExtraInfo = extraInfoService.saveExtraInfo(extraInfoReqDto, member);
         ExtraInfoResDto response = new ExtraInfoResDto(null, List.of(createdExtraInfo));
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Response.createSuccess("0000", response));
     }
 }
