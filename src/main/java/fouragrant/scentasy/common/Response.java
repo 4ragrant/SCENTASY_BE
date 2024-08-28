@@ -11,8 +11,8 @@ public class Response<T> {
     private static final String SUCCESS_RESULT = "success";
     private static final String ERROR_RESULT = "error";
 
-    private String code;
     private String message;
+    private String code;
     private T data;
 
     public static <T> Response<T> createSuccessWithNoMessage(T data) {
@@ -20,14 +20,14 @@ public class Response<T> {
     }
 
     public static <T> Response<T> createSuccess(String code, T data) {
-        return new Response<>(code, SUCCESS_RESULT, data);
+        return new Response<>(SUCCESS_RESULT, code, data);
     }
 
-    public static Response<?> createSuccessWithNoData(String message) {
-        return new Response<>(SUCCESS_RESULT, message, null);
+    public static Response<?> createSuccessWithNoData(String code) {
+        return new Response<>(SUCCESS_RESULT, code, null);
     }
 
-    public static Response<?> createError(String message) {
-        return new Response<>(ERROR_RESULT, message, null);
+    public static Response<?> createError(String code) {
+        return new Response<>(ERROR_RESULT, code, null);
     }
 }
