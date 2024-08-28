@@ -25,3 +25,7 @@ logging:
 
     com:
       fasterxml.jackson: DEBUG
+
+flask:
+  url: ${FLASK_URL}
+

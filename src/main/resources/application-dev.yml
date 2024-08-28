@@ -31,3 +31,4 @@ cloud:
 jwt:
   secret:
     key: ${JWT_KEY}
+
