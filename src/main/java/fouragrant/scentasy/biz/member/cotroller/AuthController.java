@@ -38,8 +38,9 @@ public class AuthController {
     @Operation(summary = "로그인", description = "로그인을 위한 메소드")
     @ApiResponse(content = @Content(schema = @Schema(implementation = Response.class)))
     @PostMapping("/login")
-    public Response<TokenDto> login(@RequestBody MemberReqDto memberDtoRes) {
-        return Response.createSuccess("0000", authService.login(memberDtoRes));
+    public ResponseEntity<?> login(@RequestBody MemberReqDto memberDtoRes) {
+        TokenDto tokenDto = authService.login(memberDtoRes);
+        return ResponseEntity.ok(Response.createSuccess("0000", tokenDto));
     }
 
     @Operation(summary = "토큰재발급", description = "토큰재발급을 위한 메소드")
