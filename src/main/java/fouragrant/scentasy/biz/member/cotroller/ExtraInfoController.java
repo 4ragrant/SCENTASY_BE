@@ -6,14 +6,20 @@ import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
 import fouragrant.scentasy.biz.member.service.ExtraInfoService;
 import fouragrant.scentasy.biz.member.service.MemberService;
+import fouragrant.scentasy.common.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Auth", description = "Auth 관련 api")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
@@ -21,15 +27,19 @@ public class ExtraInfoController {
     private final ExtraInfoService extraInfoService;
     private final MemberService memberService;
 
-    // 닉네임 중복 확인
-    @GetMapping("/isExist/{nickname}")
-    public ResponseEntity<Boolean> checkNickname(@PathVariable String nickname)
+    @Operation(summary = "닉네임 중복 확인", description = "닉네임 중복확인을 위한 메소드")
+    @GetMapping("/exists/{nickname}")
+    public ResponseEntity<?> checkNickname(@PathVariable String nickname)
     {
-        return ResponseEntity.ok(extraInfoService.checkNickname(nickname));
+        Boolean isExists = extraInfoService.checkNickname(nickname);
+        return ResponseEntity.ok(Response.createSuccess("0000", isExists));
     }
 
+    @Operation(summary = "추가 정보 저장", description = "추가정보 저장을 위한 메소드")
+    @ApiResponse(content = @Content(schema = @Schema(implementation = ExtraInfoResDto.class)))
+
     @PostMapping("/extra-info")
-    public ResponseEntity<ExtraInfoResDto> createExtraInfo(@Validated @RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
+    public ResponseEntity<?> createExtraInfo(@Validated @RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
         Member member = memberService.findByEmail(email);
         if(member == null) {
             return ResponseEntity.badRequest().body(new ExtraInfoResDto<>("Member not found", null));
@@ -38,6 +48,6 @@ public class ExtraInfoController {
         ExtraInfo createdExtraInfo = extraInfoService.saveExtraInfo(extraInfoReqDto, member);
         ExtraInfoResDto response = new ExtraInfoResDto(null, List.of(createdExtraInfo));
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(Response.createSuccess("0000", response));
     }
 }

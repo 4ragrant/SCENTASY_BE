@@ -35,9 +35,8 @@ public class AuthService {
     @Transactional
     public MemberResDto signup(MemberReqDto memberReqDto) {
         if (memberRepository.existsByEmail(memberReqDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new CommonException(ErrorCode.EMAIL_DUPLICATED);
         }
-
         Member member = memberReqDto.toMember(passwordEncoder);
         return MemberResDto.of(memberRepository.save(member));
     }
@@ -70,6 +69,9 @@ public class AuthService {
         } catch (UsernameNotFoundException e) {
             // 이메일이 등록되지 않은 경우 예외 처리
             throw new CommonException(ErrorCode.FAILURE_LOGIN);
+        } catch (CommonException e){
+            // 토큰 만료 시 예외 처리
+            throw new CommonException(ErrorCode.EXPIRED_TOKEN_ERROR);
         }
     }
 
