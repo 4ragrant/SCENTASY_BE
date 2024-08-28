@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.member.service;
 
 import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.member.domain.MemberStatus;
 import fouragrant.scentasy.biz.member.domain.RefreshToken;
 import fouragrant.scentasy.biz.member.dto.MemberReqDto;
 import fouragrant.scentasy.biz.member.dto.MemberResDto;
@@ -71,7 +72,7 @@ public class AuthService {
             throw new CommonException(ErrorCode.FAILURE_LOGIN);
         } catch (CommonException e){
             // 토큰 만료 시 예외 처리
-            throw new CommonException(ErrorCode.EXPIRED_TOKEN_ERROR);
+            throw new CommonException(ErrorCode.TOKEN_EXPIRED);
         }
     }
 
@@ -119,4 +120,11 @@ public class AuthService {
         // 로그아웃 성공 메시지 반환
         return "Logged out successfully.";
     }
+
+    @Transactional
+    public void activateAccount(Member member) {
+        member.setStatus(MemberStatus.ACTIVE); // 상태를 ACTIVE로 변경
+        memberRepository.save(member);
+    }
+
 }
