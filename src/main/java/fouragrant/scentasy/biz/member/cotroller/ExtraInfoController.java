@@ -30,7 +30,7 @@ public class ExtraInfoController {
     private final MemberService memberService;
     private final AuthService authService;
 
-    @Operation(summary = "닉네임 중복 확인", description = "닉네임 중복확인을 위한 메소드")
+    @Operation(summary = "닉네임 중복 확인", description = "닉네임 중복 확인을 위한 메소드")
     @GetMapping("/exists/{nickname}")
     public ResponseEntity<?> checkNickname(@PathVariable String nickname)
     {
@@ -40,14 +40,9 @@ public class ExtraInfoController {
 
     @Operation(summary = "추가 정보 저장", description = "추가정보 저장을 위한 메소드")
     @ApiResponse(content = @Content(schema = @Schema(implementation = ExtraInfoResDto.class)))
-
     @PostMapping("/extra-info")
     public ResponseEntity<?> createExtraInfo(@Validated @RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
         Member member = memberService.findByEmail(email);
-
-        if(member == null) {
-            return ResponseEntity.badRequest().body(new ExtraInfoResDto<>("Member not found", null));
-        }
 
         // 추가정보 저장
         ExtraInfo createdExtraInfo = extraInfoService.saveExtraInfo(extraInfoReqDto, member);

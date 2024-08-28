@@ -72,7 +72,7 @@ public class AuthService {
             throw new CommonException(ErrorCode.FAILURE_LOGIN);
         } catch (CommonException e){
             // 토큰 만료 시 예외 처리
-            throw new CommonException(ErrorCode.EXPIRED_TOKEN_ERROR);
+            throw new CommonException(ErrorCode.TOKEN_EXPIRED);
         }
     }
 
