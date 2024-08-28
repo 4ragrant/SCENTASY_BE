@@ -35,9 +35,8 @@ public class AuthService {
     @Transactional
     public MemberResDto signup(MemberReqDto memberReqDto) {
         if (memberRepository.existsByEmail(memberReqDto.getEmail())) {
-            throw new RuntimeException("이미 가입되어 있는 유저입니다");
+            throw new CommonException(ErrorCode.EMAIL_DUPLICATED);
         }
-
         Member member = memberReqDto.toMember(passwordEncoder);
         return MemberResDto.of(memberRepository.save(member));
     }
