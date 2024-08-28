@@ -32,8 +32,9 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    public Response<TokenDto> reissue(@RequestBody TokenReqDto tokenRequestDto) {
-        return Response.createSuccess("0000", authService.reissue(tokenRequestDto));
+    public ResponseEntity<?> reissue(@RequestBody TokenReqDto tokenRequestDto) {
+        TokenDto tokenDto = authService.reissue(tokenRequestDto);
+        return ResponseEntity.ok(Response.createSuccess("0000", tokenDto));
     }
 
     @PostMapping("/logout")
