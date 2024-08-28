@@ -38,7 +38,8 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public Response<String> logout(@RequestBody TokenReqDto tokenRequestDto) {
-        return Response.createSuccess("0000", authService.logout(tokenRequestDto));
+    public ResponseEntity<?> logout(@RequestBody TokenReqDto tokenRequestDto) {
+        authService.logout(tokenRequestDto);
+        return ResponseEntity.ok(Response.createSuccessWithNoData("0000"));
     }
 }
