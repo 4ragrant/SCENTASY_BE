@@ -5,8 +5,11 @@ import fouragrant.scentasy.biz.member.dto.MemberResDto;
 import fouragrant.scentasy.biz.member.dto.TokenDto;
 import fouragrant.scentasy.biz.member.dto.TokenReqDto;
 import fouragrant.scentasy.biz.member.service.AuthService;
-import fouragrant.scentasy.jwt.JwtBlacklist;
+import fouragrant.scentasy.common.Response;
+import fouragrant.scentasy.common.exception.CommonException;
+import fouragrant.scentasy.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,22 +20,23 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public ResponseEntity<MemberResDto> signup(@RequestBody MemberReqDto memberReqDto) {
-        return ResponseEntity.ok(authService.signup(memberReqDto));
+    public  ResponseEntity<?> signup(@RequestBody MemberReqDto memberReqDto) {
+            MemberResDto memberResDto = authService.signup(memberReqDto);
+            return ResponseEntity.ok(Response.createSuccess("0000", memberResDto));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenDto> login(@RequestBody MemberReqDto memberDtoRes) {
-        return ResponseEntity.ok(authService.login(memberDtoRes));
+    public Response<TokenDto> login(@RequestBody MemberReqDto memberDtoRes) {
+        return Response.createSuccess("0000", authService.login(memberDtoRes));
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<TokenDto> reissue(@RequestBody TokenReqDto tokenRequestDto) {
-        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+    public Response<TokenDto> reissue(@RequestBody TokenReqDto tokenRequestDto) {
+        return Response.createSuccess("0000", authService.reissue(tokenRequestDto));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestBody TokenReqDto tokenRequestDto) {
-        return ResponseEntity.ok(authService.logout(tokenRequestDto));
+    public Response<String> logout(@RequestBody TokenReqDto tokenRequestDto) {
+        return Response.createSuccess("0000", authService.logout(tokenRequestDto));
     }
 }
