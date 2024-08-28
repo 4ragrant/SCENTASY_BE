@@ -19,8 +19,8 @@ public class Response<T> {
         return new Response<>(SUCCESS_RESULT, null, data);
     }
 
-    public static <T> Response<T> createSuccess(String message, T data) {
-        return new Response<>(SUCCESS_RESULT, message, data);
+    public static <T> Response<T> createSuccess(String code, T data) {
+        return new Response<>(code, SUCCESS_RESULT, data);
     }
 
     public static Response<?> createSuccessWithNoData(String message) {
