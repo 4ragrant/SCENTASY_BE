@@ -42,17 +42,14 @@ public class ExtraInfoController {
     @ApiResponse(content = @Content(schema = @Schema(implementation = ExtraInfoResDto.class)))
     @PostMapping("/extra-info")
     public ResponseEntity<?> createExtraInfo(@Validated @RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
-        Member member = memberService.findByEmail(email);
-
         // 추가정보 저장
-        ExtraInfo createdExtraInfo = extraInfoService.saveExtraInfo(extraInfoReqDto, member);
+        Member member = memberService.findByEmail(email);
+        ExtraInfo extraInfo = extraInfoService.saveExtraInfo(extraInfoReqDto, member);
 
         // 상태 PENDING -> ACTIVE 변경
         member.setStatus(MemberStatus.ACTIVE);
         authService.activateAccount(member);
 
-        ExtraInfoResDto response = new ExtraInfoResDto(null, List.of(createdExtraInfo));
-
-        return ResponseEntity.ok(Response.createSuccess("0000", response));
+        return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(extraInfo)));
     }
 }
