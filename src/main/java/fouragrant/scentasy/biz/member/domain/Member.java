@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -34,7 +35,6 @@ public class Member extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* ------------ Information Column ------------ */
     /* -------------------------------------------- */
-
     @Column(name = "member_password")
     private String password;
 
@@ -58,6 +58,10 @@ public class Member extends BaseTimeEntity {
     @LastModifiedDate
     private LocalDateTime modifiedAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private MemberStatus status;
+
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
     /* -------------------------------------------- */
@@ -75,6 +79,7 @@ public class Member extends BaseTimeEntity {
         this.email = email;
         this.password = password;
         this.authority = authority;
+        this.status = MemberStatus.PENDING;
     }
 
 }
