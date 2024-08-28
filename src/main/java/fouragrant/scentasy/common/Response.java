@@ -11,7 +11,7 @@ public class Response<T> {
     private static final String SUCCESS_RESULT = "success";
     private static final String ERROR_RESULT = "error";
 
-    private String status;
+    private String code;
     private String message;
     private T data;
 
