@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import fouragrant.scentasy.common.exception.CommonException;
 import fouragrant.scentasy.common.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -30,9 +31,12 @@ public class AuthController {
     @Operation(summary = "회원가입", description = "회원가입을 위한 메소드")
     @ApiResponse(content = @Content(schema = @Schema(implementation = MemberReqDto.class)))
     @PostMapping("/signup")
-    public  ResponseEntity<?> signup(@RequestBody MemberReqDto memberReqDto) {
-            MemberResDto memberResDto = authService.signup(memberReqDto);
-            return ResponseEntity.ok(Response.createSuccess("0000", memberResDto));
+    public  ResponseEntity<?> signup(@RequestBody @Valid MemberReqDto memberReqDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            // 에러 처리
+        }
+        MemberResDto memberResDto = authService.signup(memberReqDto);
+        return ResponseEntity.ok(Response.createSuccess("0000", memberResDto));
     }
 
     @Operation(summary = "일반 로그인", description = "일반 로그인을 위한 메소드")
