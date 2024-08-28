@@ -46,8 +46,9 @@ public class AuthController {
     @Operation(summary = "토큰재발급", description = "토큰재발급을 위한 메소드")
     @ApiResponse(content = @Content(schema = @Schema(implementation = Response.class)))
     @PostMapping("/reissue")
-    public Response<TokenDto> reissue(@RequestBody TokenReqDto tokenRequestDto) {
-        return Response.createSuccess("0000", authService.reissue(tokenRequestDto));
+    public ResponseEntity<?> reissue(@RequestBody TokenReqDto tokenRequestDto) {
+        TokenDto tokenDto = authService.reissue(tokenRequestDto);
+        return ResponseEntity.ok(Response.createSuccess("0000", tokenDto));
     }
 
     @Operation(summary = "로그아웃", description = "로그아웃을 위한 메소드")
