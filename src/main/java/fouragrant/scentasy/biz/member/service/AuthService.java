@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.member.service;
 
 import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.member.domain.MemberStatus;
 import fouragrant.scentasy.biz.member.domain.RefreshToken;
 import fouragrant.scentasy.biz.member.dto.MemberReqDto;
 import fouragrant.scentasy.biz.member.dto.MemberResDto;
@@ -119,4 +120,11 @@ public class AuthService {
         // 로그아웃 성공 메시지 반환
         return "Logged out successfully.";
     }
+
+    @Transactional
+    public void activateAccount(Member member) {
+        member.setStatus(MemberStatus.ACTIVE); // 상태를 ACTIVE로 변경
+        memberRepository.save(member);
+    }
+
 }
