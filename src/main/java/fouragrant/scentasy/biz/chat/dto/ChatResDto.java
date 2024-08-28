@@ -1,4 +1,6 @@
 package fouragrant.scentasy.biz.chat.dto;
 
-public record ChatDtoRes() {
+public record ChatResDto(
+        String response
+) {
 }
