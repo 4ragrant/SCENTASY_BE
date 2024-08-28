@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.member.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fouragrant.scentasy.biz.chat.domain.Chat;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.post.domain.Post;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
@@ -72,6 +73,10 @@ public class Member extends BaseTimeEntity {
     @OneToMany(mappedBy = "member")
     @JsonIgnore
     private List<Perfume> perfumeList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    @JsonIgnore
+    private List<Chat> ChatList = new ArrayList<>();
 
 
     @Builder
