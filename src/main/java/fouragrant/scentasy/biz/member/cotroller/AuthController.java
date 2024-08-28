@@ -26,8 +26,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public Response<TokenDto> login(@RequestBody MemberReqDto memberDtoRes) {
-        return Response.createSuccess("0000", authService.login(memberDtoRes));
+    public ResponseEntity<?> login(@RequestBody MemberReqDto memberDtoRes) {
+        TokenDto tokenDto = authService.login(memberDtoRes);
+        return ResponseEntity.ok(Response.createSuccess("0000", tokenDto));
     }
 
     @PostMapping("/reissue")
