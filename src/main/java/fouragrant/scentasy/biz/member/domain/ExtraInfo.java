@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @DynamicInsert
+@Table(name="extra_info")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ExtraInfo extends BaseTimeEntity {
     /* -------------------------------------------- */
@@ -21,8 +22,8 @@ public class ExtraInfo extends BaseTimeEntity {
     /* -------------------------------------------- */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "extrainfo_id")
-    private Long extrainfoId;
+    @Column(name = "extra_info_id")
+    private Long id;
 
     /* -------------------------------------------- */
     /* ------------ Information Column ------------ */
@@ -45,19 +46,18 @@ public class ExtraInfo extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
     /* -------------------------------------------- */
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "member_id", unique = true, nullable = false)
+    @OneToOne(mappedBy = "extraInfo", fetch = FetchType.LAZY)
     private Member member;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "liked_scents", joinColumns = @JoinColumn(name = "extrainfo_id"))
+    @CollectionTable(name = "liked_scents", joinColumns = @JoinColumn(name = "extra_info_id"))
     @Column(name = "scent")
     private List<Scent> likedScents;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "disliked_scents", joinColumns = @JoinColumn(name = "extrainfo_id"))
+    @CollectionTable(name = "disliked_scents", joinColumns = @JoinColumn(name = "extra_info_id"))
     @Column(name = "scent")
     private List<Scent> dislikedScents;
 

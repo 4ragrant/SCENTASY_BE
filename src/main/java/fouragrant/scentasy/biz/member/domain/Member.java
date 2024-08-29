@@ -62,6 +62,11 @@ public class Member extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
     /* -------------------------------------------- */
+    // 누락되어 있었음..
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "extra_info_id")
+    private ExtraInfo extraInfo;
+
     @OneToMany(mappedBy = "member")
     @JsonIgnore
     private List<Post> postList = new ArrayList<>();
