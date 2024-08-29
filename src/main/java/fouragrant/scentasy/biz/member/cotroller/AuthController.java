@@ -6,6 +6,7 @@ import fouragrant.scentasy.biz.member.dto.TokenDto;
 import fouragrant.scentasy.biz.member.dto.TokenReqDto;
 import fouragrant.scentasy.biz.member.service.AuthService;
 import fouragrant.scentasy.common.Response;
+import fouragrant.scentasy.common.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +18,7 @@ import fouragrant.scentasy.common.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
     private final AuthService authService;
 
@@ -33,7 +36,7 @@ public class AuthController {
     @PostMapping("/signup")
     public  ResponseEntity<?> signup(@RequestBody @Valid MemberReqDto memberReqDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            // 에러 처리
+            return ResponseEntity.badRequest().body(Response.createError(ErrorCode.VALIDATION_FAILED.getCode(), ErrorCode.VALIDATION_FAILED.getMessage()));
         }
         MemberResDto memberResDto = authService.signup(memberReqDto);
         return ResponseEntity.ok(Response.createSuccess("0000", memberResDto));
