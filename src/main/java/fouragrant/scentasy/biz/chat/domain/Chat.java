@@ -29,10 +29,11 @@ import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-@Entity
 @Getter
-@DynamicInsert
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity(name = "chat")
+@Builder
 public class Chat extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* -------------- Default Column -------------- */
@@ -61,4 +62,5 @@ public class Chat extends BaseTimeEntity {
     @JsonBackReference
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
+
 }
