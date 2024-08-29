@@ -6,14 +6,22 @@ import fouragrant.scentasy.biz.member.dto.TokenDto;
 import fouragrant.scentasy.biz.member.dto.TokenReqDto;
 import fouragrant.scentasy.biz.member.service.AuthService;
 import fouragrant.scentasy.common.Response;
+import fouragrant.scentasy.common.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import lombok.RequiredArgsConstructor;
+import fouragrant.scentasy.common.exception.CommonException;
+import fouragrant.scentasy.common.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Auth", description = "Auth 관련 api")
@@ -26,9 +34,12 @@ public class AuthController {
     @Operation(summary = "회원가입", description = "회원가입을 위한 메소드")
     @ApiResponse(content = @Content(schema = @Schema(implementation = MemberReqDto.class)))
     @PostMapping("/signup")
-    public  ResponseEntity<?> signup(@RequestBody MemberReqDto memberReqDto) {
-            MemberResDto memberResDto = authService.signup(memberReqDto);
-            return ResponseEntity.ok(Response.createSuccess("0000", memberResDto));
+    public  ResponseEntity<?> signup(@RequestBody @Valid MemberReqDto memberReqDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(Response.createError(ErrorCode.VALIDATION_FAILED.getCode(), ErrorCode.VALIDATION_FAILED.getMessage()));
+        }
+        MemberResDto memberResDto = authService.signup(memberReqDto);
+        return ResponseEntity.ok(Response.createSuccess("0000", memberResDto));
     }
 
     @Operation(summary = "일반 로그인", description = "일반 로그인을 위한 메소드")

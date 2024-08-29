@@ -1,5 +1,6 @@
 package fouragrant.scentasy.biz.member.service;
 
+import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.MemberStatus;
 import fouragrant.scentasy.biz.member.domain.RefreshToken;
@@ -7,6 +8,7 @@ import fouragrant.scentasy.biz.member.dto.MemberReqDto;
 import fouragrant.scentasy.biz.member.dto.MemberResDto;
 import fouragrant.scentasy.biz.member.dto.TokenDto;
 import fouragrant.scentasy.biz.member.dto.TokenReqDto;
+import fouragrant.scentasy.biz.member.repository.ExtraInfoRepository;
 import fouragrant.scentasy.biz.member.repository.MemberRepository;
 import fouragrant.scentasy.biz.member.repository.RefreshTokenRepository;
 import fouragrant.scentasy.common.exception.CommonException;
@@ -28,9 +30,10 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final MemberRepository memberRepository;
+    private final ExtraInfoRepository extraInfoRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
-    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtBlacklist jwtBlacklist;
 
     @Transactional
@@ -44,17 +47,18 @@ public class AuthService {
 
     @Transactional
     public TokenDto login(MemberReqDto memberReqDto) {
-        try {// 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
+        try {
+            // Login ID/PW를 기반으로 AuthenticationToken 생성
             UsernamePasswordAuthenticationToken authenticationToken = memberReqDto.toAuthentication();
 
-            // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
-            //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
+            // 실제로 검증(사용자 비밀번호 체크)이 이루어지는 부분
+            // authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
             Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            // 3. 인증 정보를 기반으로 JWT 토큰 생성
+            // 인증 정보를 기반으로 JWT 토큰 생성
             TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
-            // 4. RefreshToken 저장
+            // RefreshToken 저장
             RefreshToken refreshToken = RefreshToken.builder()
                     .key(authentication.getName())
                     .value(tokenDto.getRefreshToken())
@@ -62,7 +66,17 @@ public class AuthService {
 
             refreshTokenRepository.save(refreshToken);
 
-            // 5. 토큰 발급
+            // 오류처리 수정 필요
+            Member member = memberRepository.findByEmail(memberReqDto.getEmail())
+                    .orElseThrow(() -> new CommonException(ErrorCode.FAILURE_LOGIN)); // Member 객체 가져오기
+            tokenDto.setMemberId(member.getId());  // MemberId 설정
+            tokenDto.setImageUrl(member.getImageUrl());  // Migurl 설정
+
+            ExtraInfo extraInfo = extraInfoRepository.findById(member.getId())
+                    .orElseThrow(() -> new CommonException(ErrorCode.EXTRA_INFO_NOT_FOUND)); // 적절한 에러 코드 사용
+            tokenDto.setNickname(extraInfo.getNickname());
+
+            // 토큰 발급
             return tokenDto;
         } catch (BadCredentialsException e) {
             // 비밀번호가 맞지 않는 경우 예외 처리
