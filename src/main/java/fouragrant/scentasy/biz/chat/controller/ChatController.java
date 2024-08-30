@@ -3,13 +3,14 @@ package fouragrant.scentasy.biz.chat.controller;
 import fouragrant.scentasy.biz.chat.dto.ChatReqDto;
 import fouragrant.scentasy.biz.chat.dto.ChatResDto;
 import fouragrant.scentasy.biz.chat.service.ChatService;
-import fouragrant.scentasy.biz.member.CustomUserDetails;
-import fouragrant.scentasy.biz.member.service.CustomUserDetailsService;
 import fouragrant.scentasy.common.Response;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +30,12 @@ public class ChatController {
                                   @PathVariable Long memberId) {
             ChatResDto chatResDto = chatService.processChat(chatReqDto, memberId);
             return ResponseEntity.ok(Response.createSuccess("0000", chatResDto));
+    }
+
+    @GetMapping("/dates/{memberId}")
+    public ResponseEntity<Response<List<Date>>> getChatDatesByMemberId(@PathVariable Long memberId) {
+        List<Date> chatDates = chatService.getChatDatesByMemberId(memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000", chatDates));
     }
 
 }

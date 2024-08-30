@@ -10,7 +10,10 @@ import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -96,6 +99,10 @@ public class ChatService {
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+    }
+
+    public List<Date> getChatDatesByMemberId(Long memberId) {
+        return chatRepository.findDistinctChatDatesByMemberId(memberId);
     }
 
 }
