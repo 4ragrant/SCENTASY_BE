@@ -2,24 +2,21 @@ package fouragrant.scentasy.biz.perfume.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fouragrant.scentasy.biz.member.domain.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import fouragrant.scentasy.common.dto.BaseTimeEntity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
+import java.util.List;
+
 @Entity
 @Getter
 @DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Perfume {
+@Table(name = "perfume")
+public class Perfume extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* -------------- Default Column -------------- */
     /* -------------------------------------------- */
@@ -28,6 +25,24 @@ public class Perfume {
     @Column(name = "perfume_id")
     private Long perfumeId;
 
+    /* -------------------------------------------- */
+    /* ------------ Information Column ------------ */
+    /* -------------------------------------------- */
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "description")
+    private String description;
+
+    @ElementCollection
+    @CollectionTable(name = "perfume_accords", joinColumns = @JoinColumn(name = "perfume_id"))
+    @Column(name = "accords")
+    private List<String> accords;
+
+    @ElementCollection
+    @CollectionTable(name = "perfume_notes", joinColumns = @JoinColumn(name = "perfume_id"))
+    @Column(name = "notes")
+    private List<String> notes;
 
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
