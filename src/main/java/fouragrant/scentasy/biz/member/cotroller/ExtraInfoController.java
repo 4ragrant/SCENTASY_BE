@@ -73,4 +73,13 @@ public class ExtraInfoController {
 
         return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(extraInfo)));
     }
+
+    @PatchMapping("/extra-info/{memberId}")
+    public ResponseEntity<?> updateExtraInfo(@PathVariable Long memberId, @Validated @RequestBody ExtraInfoReqDto extraInfoReqDto) {
+        Member member = memberService.findById(memberId);
+        ExtraInfo updatedExtraInfo = extraInfoService.updateExtraInfo(memberId, extraInfoReqDto, member);
+
+        return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(updatedExtraInfo)));
+    }
+
 }

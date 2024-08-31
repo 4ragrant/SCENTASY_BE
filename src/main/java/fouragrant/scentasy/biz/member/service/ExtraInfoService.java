@@ -36,6 +36,42 @@ public class ExtraInfoService {
         return repository.save(extraInfo);
     }
 
+    // 추가정보 수정
+    public ExtraInfo updateExtraInfo(Long id, ExtraInfoReqDto extraInfoReqDto, Member member) {
+        ExtraInfo extraInfo = repository.findById(id)
+                .orElseThrow(() -> new CommonException(ErrorCode.EXTRA_INFO_NOT_FOUND));
+
+        if (extraInfoReqDto.getNickname() != null) {
+            if (!extraInfo.getNickname().equals(extraInfoReqDto.getNickname()) &&
+                    repository.existsByNickname(extraInfoReqDto.getNickname())) {
+                throw new CommonException(ErrorCode.NICKNAME_DUPLICATED);
+            }
+            extraInfo.setNickname(extraInfoReqDto.getNickname());
+        }
+
+        if (extraInfoReqDto.getGender() != null) {
+            extraInfo.setGender(extraInfoReqDto.getGender());
+        }
+
+        if (extraInfoReqDto.getAge() != null) {
+            extraInfo.setAge(extraInfoReqDto.getAge());
+        }
+
+        if (extraInfoReqDto.getSeason() != null) {
+            extraInfo.setSeason(extraInfoReqDto.getSeason());
+        }
+
+        if (extraInfoReqDto.getLikedScents() != null) {
+            extraInfo.setLikedScents(extraInfoReqDto.getLikedScents());
+        }
+
+        if (extraInfoReqDto.getDislikedScents() != null) {
+            extraInfo.setDislikedScents(extraInfoReqDto.getDislikedScents());
+        }
+
+        return repository.save(extraInfo);
+    }
+
     // 닉네임 중복 확인
     public boolean checkNickname(String nickname) {
         return repository.existsByNickname(nickname);
