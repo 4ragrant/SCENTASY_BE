@@ -5,11 +5,16 @@ import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.MemberStatus;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
+import fouragrant.scentasy.biz.member.dto.MemberReqDto;
+import fouragrant.scentasy.biz.member.dto.MemberResDto;
+import fouragrant.scentasy.biz.member.dto.TokenReqDto;
 import fouragrant.scentasy.biz.member.service.AuthService;
 import fouragrant.scentasy.biz.member.service.ExtraInfoService;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.common.Response;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,6 +36,10 @@ public class ExtraInfoController {
     private final AuthService authService;
 
     @Operation(summary = "닉네임 중복 확인", description = "닉네임 중복 확인을 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "validate successfully!")
+    @Parameters({
+            @Parameter(name = "nickname", description = "닉네임, path variable")
+    })
     @GetMapping("/exists/{nickname}")
     public ResponseEntity<?> checkNickname(@PathVariable String nickname)
     {
@@ -39,7 +48,19 @@ public class ExtraInfoController {
     }
 
     @Operation(summary = "추가 정보 저장", description = "추가정보 저장을 위한 메소드")
-    @ApiResponse(content = @Content(schema = @Schema(implementation = ExtraInfoResDto.class)))
+    @ApiResponse(responseCode = "0000", description = "add extra-info successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExtraInfoResDto.class)
+            )
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "추가정보 저장 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = ExtraInfoReqDto.class)
+            )
+    )
     @PostMapping("/extra-info")
     public ResponseEntity<?> createExtraInfo(@Validated @RequestBody ExtraInfoReqDto extraInfoReqDto, @RequestParam("email") String email) {
         // 추가정보 저장
