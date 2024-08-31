@@ -3,6 +3,7 @@ package fouragrant.scentasy.biz.chat.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fouragrant.scentasy.biz.chat.domain.Chat;
+import fouragrant.scentasy.biz.chat.dto.ChatListResDto;
 import fouragrant.scentasy.biz.chat.dto.ChatReqDto;
 import fouragrant.scentasy.biz.chat.dto.ChatResDto;
 import fouragrant.scentasy.biz.chat.repository.ChatRepository;
@@ -10,7 +11,12 @@ import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -97,5 +103,26 @@ public class ChatService {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
     }
+
+    public List<Date> getChatDatesByMemberId(Long memberId) {
+        return chatRepository.findDistinctChatDatesByMemberId(memberId);
+    }
+
+    @Transactional
+    public List<ChatListResDto> getChatsByMemberIdAndDate(Long memberId, LocalDate date) {
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+
+        return chatRepository.findChatsByMemberIdAndDate(memberId, startOfDay, endOfDay).stream()
+                .map(chat -> ChatListResDto.builder()
+                        .chatId(chat.getId())
+                        .createdAt(chat.getCreatedAt())
+                        .input(chat.getInput())
+                        .response(chat.getResponse())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
 
 }
