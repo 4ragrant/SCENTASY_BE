@@ -9,6 +9,7 @@ import fouragrant.scentasy.biz.chat.dto.ChatResDto;
 import fouragrant.scentasy.biz.chat.repository.ChatRepository;
 import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import java.sql.Date;
@@ -48,15 +49,16 @@ public class ChatService {
     @Transactional
     public ChatResDto processChat(ChatReqDto chatReqDto, Long memberId) {
         Member member = findMemberById(memberId);
-        // ExtraInfo extraInfo = member.getExtraInfo();
-//
-//        if (extraInfo == null) {
-//            log.warn("ExtraInfo is null for memberId: {}", memberId);
-//        } else {
-//            log.info("ExtraInfo for memberId {}: {}", memberId, extraInfo);
-//        }
+        ExtraInfo extraInfo = member.getExtraInfo();
 
-        ChatReqDto requestWithExtraInfo = new ChatReqDto(chatReqDto.input(), null);
+        if (extraInfo == null) {
+            log.warn("ExtraInfo is null for memberId: {}", memberId);
+        } else {
+            log.info("ExtraInfo for memberId {}: {}", memberId, extraInfo);
+        }
+
+        assert extraInfo != null;
+        ChatReqDto requestWithExtraInfo = new ChatReqDto(chatReqDto.input(), extraInfo.toDto());
         log.info("{}", requestWithExtraInfo);
         String response = communicateWithFlask(requestWithExtraInfo);
 

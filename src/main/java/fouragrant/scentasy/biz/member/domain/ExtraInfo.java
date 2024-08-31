@@ -46,7 +46,7 @@ public class ExtraInfo extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
     /* -------------------------------------------- */
-    @OneToOne(mappedBy = "extraInfo", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "extraInfo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Member member;
 
     @ElementCollection

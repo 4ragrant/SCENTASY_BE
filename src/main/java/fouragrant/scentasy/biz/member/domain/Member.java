@@ -66,8 +66,7 @@ public class Member extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
     /* -------------------------------------------- */
-    // 누락되어 있었음..
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "extra_info_id")
     private ExtraInfo extraInfo;
 
