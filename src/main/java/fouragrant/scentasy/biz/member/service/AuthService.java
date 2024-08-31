@@ -15,6 +15,7 @@ import fouragrant.scentasy.common.exception.CommonException;
 import fouragrant.scentasy.common.exception.ErrorCode;
 import fouragrant.scentasy.jwt.JwtBlacklist;
 import fouragrant.scentasy.jwt.TokenProvider;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -66,15 +67,16 @@ public class AuthService {
 
             refreshTokenRepository.save(refreshToken);
 
-            // 오류처리 수정 필요
             Member member = memberRepository.findByEmail(memberReqDto.getEmail())
-                    .orElseThrow(() -> new CommonException(ErrorCode.FAILURE_LOGIN)); // Member 객체 가져오기
+                    .orElseThrow(() -> new CommonException(ErrorCode.FAILURE_LOGIN));
             tokenDto.setMemberId(member.getId());  // MemberId 설정
-            tokenDto.setImageUrl(member.getImageUrl());  // Migurl 설정
+            tokenDto.setImageUrl(member.getImageUrl());  // imgUrl 설정
 
-            ExtraInfo extraInfo = extraInfoRepository.findById(member.getExtraInfo().getId())
-                    .orElseThrow(() -> new CommonException(ErrorCode.EXTRA_INFO_NOT_FOUND)); // 적절한 에러 코드 사용
-            tokenDto.setNickname(extraInfo.getNickname());
+            ExtraInfo extraInfo = member.getExtraInfo();
+            if(extraInfo == null) {
+                throw new CommonException(ErrorCode.EXTRA_INFO_NOT_FOUND);
+            }
+            tokenDto.setNickname(extraInfo.getNickname()); // nickname 설정
 
             // 토큰 발급
             return tokenDto;
@@ -84,7 +86,7 @@ public class AuthService {
         } catch (UsernameNotFoundException e) {
             // 이메일이 등록되지 않은 경우 예외 처리
             throw new CommonException(ErrorCode.FAILURE_LOGIN);
-        } catch (CommonException e){
+        } catch (ExpiredJwtException e){
             // 토큰 만료 시 예외 처리
             throw new CommonException(ErrorCode.TOKEN_EXPIRED);
         }
