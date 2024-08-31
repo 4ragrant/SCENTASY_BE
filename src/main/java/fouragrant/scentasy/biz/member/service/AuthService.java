@@ -72,7 +72,7 @@ public class AuthService {
             tokenDto.setMemberId(member.getId());  // MemberId 설정
             tokenDto.setImageUrl(member.getImageUrl());  // Migurl 설정
 
-            ExtraInfo extraInfo = extraInfoRepository.findById(member.getId())
+            ExtraInfo extraInfo = extraInfoRepository.findById(member.getExtraInfo().getId())
                     .orElseThrow(() -> new CommonException(ErrorCode.EXTRA_INFO_NOT_FOUND)); // 적절한 에러 코드 사용
             tokenDto.setNickname(extraInfo.getNickname());
 
