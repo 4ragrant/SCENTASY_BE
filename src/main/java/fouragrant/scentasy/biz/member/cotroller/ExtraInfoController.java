@@ -5,9 +5,6 @@ import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.MemberStatus;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
-import fouragrant.scentasy.biz.member.dto.MemberReqDto;
-import fouragrant.scentasy.biz.member.dto.MemberResDto;
-import fouragrant.scentasy.biz.member.dto.TokenReqDto;
 import fouragrant.scentasy.biz.member.service.AuthService;
 import fouragrant.scentasy.biz.member.service.ExtraInfoService;
 import fouragrant.scentasy.biz.member.service.MemberService;
@@ -23,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "Auth", description = "Auth 관련 api")
 @RestController
@@ -48,7 +43,7 @@ public class ExtraInfoController {
     }
 
     @Operation(summary = "추가 정보 저장", description = "추가정보 저장을 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "add extra-info successfully",
+    @ApiResponse(responseCode = "0000", description = "add extra-info successfully!",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = ExtraInfoResDto.class)
@@ -74,6 +69,19 @@ public class ExtraInfoController {
         return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(extraInfo)));
     }
 
+    @Operation(summary = "추가정보 수정", description = "멤버의 추가정보를 수정하는 메소드")
+    @ApiResponse(responseCode = "0000", description = "update extra-info successfully!")
+    @Parameters({
+            @Parameter(name = "memberId", description = "멤버의 ID, path variable", required = true, example = "1")
+    })
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "추가정보 수정 요청 본문",
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExtraInfoReqDto.class)
+            )
+    )
     @PatchMapping("/extra-info/{memberId}")
     public ResponseEntity<?> updateExtraInfo(@PathVariable Long memberId, @Validated @RequestBody ExtraInfoReqDto extraInfoReqDto) {
         Member member = memberService.findById(memberId);
