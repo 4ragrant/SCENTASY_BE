@@ -7,8 +7,10 @@ import fouragrant.scentasy.biz.member.repository.ExtraInfoRepository;
 import fouragrant.scentasy.common.exception.CommonException;
 import fouragrant.scentasy.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ExtraInfoService {
@@ -25,6 +27,8 @@ public class ExtraInfoService {
         }
 
         ExtraInfo extraInfo = ExtraInfo.fromDto(extraInfoReqDto, member);
+        member.setExtraInfo(extraInfo);
+
         return repository.save(extraInfo);
     }
 
