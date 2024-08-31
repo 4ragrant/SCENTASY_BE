@@ -22,6 +22,10 @@ public class ExtraInfoService {
             throw new CommonException(ErrorCode.FAILURE_LOGIN);
         }
 
+        if (repository.existsByMember(member)) {
+            throw new CommonException(ErrorCode.EXTRA_INFO_DUPLICATED);
+        }
+
         if (repository.existsByNickname(extraInfoReqDto.getNickname())) {
             throw new CommonException(ErrorCode.NICKNAME_DUPLICATED);
         }
