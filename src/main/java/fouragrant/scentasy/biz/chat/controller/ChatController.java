@@ -1,5 +1,7 @@
 package fouragrant.scentasy.biz.chat.controller;
 
+import fouragrant.scentasy.biz.chat.domain.Chat;
+import fouragrant.scentasy.biz.chat.dto.ChatListResDto;
 import fouragrant.scentasy.biz.chat.dto.ChatReqDto;
 import fouragrant.scentasy.biz.chat.dto.ChatResDto;
 import fouragrant.scentasy.biz.chat.service.ChatService;
@@ -37,5 +39,15 @@ public class ChatController {
         List<Date> chatDates = chatService.getChatDatesByMemberId(memberId);
         return ResponseEntity.ok(Response.createSuccess("0000", chatDates));
     }
+
+    @GetMapping("/{memberId}/{date}")
+    public ResponseEntity<Response<List<ChatListResDto>>> getChatsByMemberIdAndDate(@PathVariable Long memberId,
+                                                                                    @PathVariable String date) {
+        LocalDate parsedDate = LocalDate.parse(date);
+        List<ChatListResDto> chats = chatService.getChatsByMemberIdAndDate(memberId, parsedDate);
+        return ResponseEntity.ok(Response.createSuccess("0000", chats));
+    }
+
+
 
 }
