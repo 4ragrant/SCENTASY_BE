@@ -1,19 +1,20 @@
 package fouragrant.scentasy.biz.perfume.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
+import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
+import lombok.*;
 
 import java.util.List;
 
-@Entity
+@Entity(name = "perfume")
 @Getter
-@DynamicInsert
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "perfume")
 public class Perfume extends BaseTimeEntity {
@@ -34,6 +35,14 @@ public class Perfume extends BaseTimeEntity {
     @Column(name = "description")
     private String description;
 
+    /* -------------------------------------------- */
+    /* -------------- Relation Column ------------- */
+    /* -------------------------------------------- */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    @JsonIgnore
+    private Member member;
+
     @ElementCollection
     @CollectionTable(name = "perfume_accords", joinColumns = @JoinColumn(name = "perfume_id"))
     @Column(name = "accords")
@@ -44,11 +53,14 @@ public class Perfume extends BaseTimeEntity {
     @Column(name = "notes")
     private List<String> notes;
 
-    /* -------------------------------------------- */
-    /* -------------- Relation Column ------------- */
-    /* -------------------------------------------- */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    @JsonIgnore
-    private Member member;
+    // PerfumeDto를 Perfume으로 변환
+    public static Perfume fromDto(PerfumeDto dto, Member member) {
+        return Perfume.builder()
+                .title(dto.title())
+                .description(dto.description())
+                .accords(dto.accords())
+                .notes(dto.notes())
+                .member(member)
+                .build();
+    }
 }
