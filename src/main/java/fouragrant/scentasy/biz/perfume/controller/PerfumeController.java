@@ -1,11 +1,16 @@
 package fouragrant.scentasy.biz.perfume.controller;
 
 import fouragrant.scentasy.biz.member.domain.Member;
-import fouragrant.scentasy.biz.member.repository.MemberRepository;
+import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
+import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
 import fouragrant.scentasy.biz.perfume.service.PerfumeService;
 import fouragrant.scentasy.common.Response;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +24,20 @@ public class PerfumeController {
     private final PerfumeService perfumeService;
     private final MemberService memberService;
 
-    // 생성된 향수 저장
+    @Operation(summary = "향수 정보 저장", description = "생성된 향수 정보 저장을 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "add perfume successfully!",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PerfumeDto.class)
+            )
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "향수 생성 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = PerfumeDto.class)
+            )
+    )
     @PostMapping("/{memberId}")
     public ResponseEntity<?> createPerfume(@PathVariable Long memberId, @RequestBody PerfumeDto perfumeDto) {
         Member member = memberService.findById(memberId);
