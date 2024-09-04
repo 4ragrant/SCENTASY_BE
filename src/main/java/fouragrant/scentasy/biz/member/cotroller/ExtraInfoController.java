@@ -66,7 +66,7 @@ public class ExtraInfoController {
         member.setStatus(MemberStatus.ACTIVE);
         authService.activateAccount(member);
 
-        return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(extraInfo)));
+        return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(member, extraInfo)));
     }
 
     @Operation(summary = "추가정보 수정", description = "멤버의 추가정보를 수정하는 메소드")
@@ -87,7 +87,7 @@ public class ExtraInfoController {
         Member member = memberService.findById(memberId);
         ExtraInfo updatedExtraInfo = extraInfoService.updateExtraInfo(memberId, extraInfoReqDto, member);
 
-        return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(updatedExtraInfo)));
+        return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(member, updatedExtraInfo)));
     }
 
 }

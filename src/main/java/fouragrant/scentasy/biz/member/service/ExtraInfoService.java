@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -77,4 +79,14 @@ public class ExtraInfoService {
         return repository.existsByNickname(nickname);
     }
 
+    // 멤버 ID로 조회
+    public ExtraInfo findByMemberId(Long memberId) {
+        ExtraInfo extraInfo = repository.findByMemberId(memberId);
+
+        if (extraInfo == null) {
+            throw new CommonException(ErrorCode.EXTRA_INFO_NOT_FOUND);
+        }
+
+        return extraInfo;
+    }
 }
