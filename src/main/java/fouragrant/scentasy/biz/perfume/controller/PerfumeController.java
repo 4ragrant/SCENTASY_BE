@@ -17,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Perfume", description = "향수 관련 API")
 @RestController
 @RequestMapping("/api/perfume")
@@ -71,5 +73,22 @@ public class PerfumeController {
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeDto));
     }
 
-    // 전체 향수 목록 조회
+    @Operation(
+            summary = "전체 향수 목록 조회",
+            description = "특정 멤버의 전체 향수 목록을 조회를 위한 메소드"
+    )
+    @ApiResponse(
+            responseCode = "0000",
+            description = "Perfume list retrieved successfully!",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Perfume.class)
+            )
+    )
+    @GetMapping("/member/{memberId}")
+    public ResponseEntity<?> getMemberPerfume(@PathVariable Long memberId) {
+        List<Perfume> perfumes = perfumeService.findPerfumesByMemberId(memberId);
+
+        return ResponseEntity.ok(Response.createSuccess("0000", perfumes));
+    }
 }
