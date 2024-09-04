@@ -30,8 +30,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
-    // 포스트 목록 조회
     @Operation(summary = "포스트 리스트 조회", description = "포스트 리스트 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get post list successfully",
             content = @Content(
@@ -45,4 +43,19 @@ public class PostController {
         List<PostResDto> postList = postService.getPostList();
         return ResponseEntity.ok(Response.createSuccess("0000",postList));
     }
+    @Operation(summary = "인기있는 포스트 리스트 조회", description = "인기있는 포스트 리스트 조회를 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "get hot post list successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
+    @GetMapping("/top3")
+    public ResponseEntity<Response<List<PostResDto>>> getTopPostList() {
+        List<PostResDto> postList = postService.getTopPostList();
+        return ResponseEntity.ok(Response.createSuccess("0000",postList));
+    }
+
+
 }
