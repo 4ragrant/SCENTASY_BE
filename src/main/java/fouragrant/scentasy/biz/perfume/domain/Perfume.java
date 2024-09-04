@@ -1,10 +1,8 @@
 package fouragrant.scentasy.biz.perfume.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
-import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
-import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
+import fouragrant.scentasy.biz.member.domain.Scent;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -51,5 +49,5 @@ public class Perfume extends BaseTimeEntity {
     @ElementCollection
     @CollectionTable(name = "perfume_notes", joinColumns = @JoinColumn(name = "perfume_id"))
     @Column(name = "notes")
-    private List<String> notes;
+    private List<Scent> notes;
 }

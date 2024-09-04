@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.perfume.dto;
 
 import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.member.domain.Scent;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public record PerfumeDto(
         String title,
         String description,
         List<String> accords,
-        List<String> notes
+        List<Scent> notes
 ) {
     // Perfume 엔티티를 PerfumeDto로 변환
     public static PerfumeDto fromEntity(Perfume perfume) {
