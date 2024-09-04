@@ -52,15 +52,4 @@ public class Perfume extends BaseTimeEntity {
     @CollectionTable(name = "perfume_notes", joinColumns = @JoinColumn(name = "perfume_id"))
     @Column(name = "notes")
     private List<String> notes;
-
-    // PerfumeDto를 Perfume으로 변환
-    public static Perfume fromDto(PerfumeDto dto, Member member) {
-        return Perfume.builder()
-                .title(dto.title())
-                .description(dto.description())
-                .accords(dto.accords())
-                .notes(dto.notes())
-                .member(member)
-                .build();
-    }
 }

@@ -4,6 +4,7 @@ import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
 import fouragrant.scentasy.biz.member.service.MemberService;
+import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
 import fouragrant.scentasy.biz.perfume.service.PerfumeService;
 import fouragrant.scentasy.common.Response;
@@ -24,8 +25,12 @@ public class PerfumeController {
     private final PerfumeService perfumeService;
     private final MemberService memberService;
 
-    @Operation(summary = "향수 정보 저장", description = "생성된 향수 정보 저장을 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "add perfume successfully!",
+    @Operation(
+            summary = "향수 정보 저장",
+            description = "생성된 향수 정보 저장을 위한 메소드")
+    @ApiResponse(
+            responseCode = "0000",
+            description = "Perfume added successfully!",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PerfumeDto.class)
@@ -46,7 +51,25 @@ public class PerfumeController {
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeDto));
     }
 
-    // 향수 목록 조회
+    @Operation(
+            summary = "향수 상세 정보 조회",
+            description = "생성된 향수의 상세 정보 조회를 위한 메소드"
+    )
+    @ApiResponse(
+            responseCode = "0000",
+            description = "Perfume details retrieved successfully!",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PerfumeDto.class)
+            )
+    )
+    @GetMapping("/{perfumeId}")
+    public ResponseEntity<?> getPerfume(@PathVariable Long perfumeId) {
+        Perfume perfume = perfumeService.findPerfumeById(perfumeId);
+        PerfumeDto perfumeDto = PerfumeDto.fromEntity(perfume);
+
+        return ResponseEntity.ok(Response.createSuccess("0000", perfumeDto));
+    }
 
     // 전체 향수 목록 조회
 }
