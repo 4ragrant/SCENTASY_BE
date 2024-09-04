@@ -11,6 +11,7 @@ public enum ErrorCode {
     VALIDATION_FAILED("4200", HttpStatus.BAD_REQUEST, "유효성 검증에 실패했습니다."),
     EMAIL_DUPLICATED("4201", HttpStatus.CONFLICT, "존재하는 이메일입니다."),
     NICKNAME_DUPLICATED("4202", HttpStatus.CONFLICT, "존재하는 닉네임입니다."),
+    EXTRA_INFO_DUPLICATED("4203", HttpStatus.CONFLICT, "추가정보가 존재하는 회원입니다."),
     FAILURE_LOGIN("4300", HttpStatus.UNAUTHORIZED, "잘못된 아이디 또는 비밀번호입니다."),
     EXTRA_INFO_NOT_FOUND("4301", HttpStatus.UNAUTHORIZED, "추가정보가 존재하지 않습니다."),
     TOKEN_EXPIRED("4400", HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),

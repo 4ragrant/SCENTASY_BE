@@ -32,6 +32,7 @@ public class MemberService {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new CommonException(ErrorCode.FAILURE_LOGIN));
     }
+
     public Member findByEmail(String email) {
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new CommonException(ErrorCode.FAILURE_LOGIN));
