@@ -68,26 +68,4 @@ public class ExtraInfoController {
 
         return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(member, extraInfo)));
     }
-
-    @Operation(summary = "추가정보 수정", description = "멤버의 추가정보를 수정하는 메소드")
-    @ApiResponse(responseCode = "0000", description = "update extra-info successfully!")
-    @Parameters({
-            @Parameter(name = "memberId", description = "멤버의 ID, path variable", required = true, example = "1")
-    })
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "추가정보 수정 요청 본문",
-            required = true,
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ExtraInfoReqDto.class)
-            )
-    )
-    @PatchMapping("/extra-info/{memberId}")
-    public ResponseEntity<?> updateExtraInfo(@PathVariable Long memberId, @Validated @RequestBody ExtraInfoReqDto extraInfoReqDto) {
-        Member member = memberService.findById(memberId);
-        ExtraInfo updatedExtraInfo = extraInfoService.updateExtraInfo(memberId, extraInfoReqDto, member);
-
-        return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(member, updatedExtraInfo)));
-    }
-
 }
