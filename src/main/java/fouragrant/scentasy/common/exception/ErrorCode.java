@@ -18,7 +18,11 @@ public enum ErrorCode {
     TOKEN_IN_BLACKLIST("4401", HttpStatus.UNAUTHORIZED, "블랙리스트 토큰." ),
 
     // community
-    POST_NOT_FOUND("4500", HttpStatus.NOT_FOUND, "포스트가 존재하지 않습니다.");
+    POST_NOT_FOUND("4500", HttpStatus.NOT_FOUND, "포스트가 존재하지 않습니다."),
+    MEMBER_NOT_FOUND("4501", HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."),
+
+    PERFUME_NOT_FOUND("4500", HttpStatus.BAD_REQUEST, "해당 향수가 존재하지 않습니다.");
+
 
     private final String code;
     private final HttpStatus httpStatus;

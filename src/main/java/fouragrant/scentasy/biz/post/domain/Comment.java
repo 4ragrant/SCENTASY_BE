@@ -1,5 +1,6 @@
 package fouragrant.scentasy.biz.post.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import fouragrant.scentasy.biz.member.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

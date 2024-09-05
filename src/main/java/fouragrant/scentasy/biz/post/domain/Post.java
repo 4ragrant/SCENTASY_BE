@@ -1,7 +1,10 @@
 package fouragrant.scentasy.biz.post.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.perfume.domain.Perfume;
+import fouragrant.scentasy.biz.post.dto.PostReqDto;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -13,6 +16,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,6 +35,7 @@ public class Post extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* ------------ Information Column ------------ */
     /* -------------------------------------------- */
+
     @Column(name = "post_title")
     @NotBlank
     private String title;
@@ -54,8 +59,12 @@ public class Post extends BaseTimeEntity {
     /* -------------------------------------------- */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    @JsonIgnore
     private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "perfume_id")
+    @JsonIgnore
+    private Perfume perfume;  // 해당 게시물에 사용된 향수
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
@@ -64,11 +73,14 @@ public class Post extends BaseTimeEntity {
     private List<PostLike> postLikes;
 
     // 생성자
-    public Post(String title, String content, Member member) {
-        this.title = title;
-        this.content = content;
+    public Post(PostReqDto postReqDto, Member member, Perfume perfume) {
+        this.title = postReqDto.getTitle();
+        this.content = postReqDto.getContent();
         this.member = member;
+        this.perfume = perfume;
         this.viewCount = 0; // 초기 조회수는 0으로 설정
+        this.comments = new ArrayList<>();  // 빈 리스트로 초기화
+        this.postLikes = new ArrayList<>(); // 빈 리스트로 초기화
     }
 
     // 좋아요 개수 반환 메소드

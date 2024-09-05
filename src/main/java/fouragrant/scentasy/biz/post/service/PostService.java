@@ -1,5 +1,9 @@
 package fouragrant.scentasy.biz.post.service;
 
+import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.member.service.MemberService;
+import fouragrant.scentasy.biz.perfume.domain.Perfume;
+import fouragrant.scentasy.biz.perfume.service.PerfumeService;
 import fouragrant.scentasy.biz.post.domain.Post;
 import fouragrant.scentasy.biz.post.dto.PostReqDto;
 import fouragrant.scentasy.biz.post.dto.PostResDto;
@@ -23,6 +27,8 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final MemberService memberService;
+    private final PerfumeService perfumeService;
 
     public List<PostResDto> getPostList() {
         List<Post> posts = postRepository.findAll();
@@ -48,4 +54,22 @@ public class PostService {
                 .collect(Collectors.toList()); // 리스트 변환
     }
 
+    public PostResDto createPost(PostReqDto postReqDto, Long memberId, Long perfumeId) {
+        Member member = memberService.findById(memberId);
+        // 회원이 없으면 예외 던짐
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        Perfume perfume = perfumeService.findPerfumeById(perfumeId);
+        // 향수가 없으면 예외 던짐
+        if (perfume == null) {
+            throw new CommonException(ErrorCode.PERFUME_NOT_FOUND);
+        }
+
+        Post post = new Post(postReqDto, member, perfume);
+
+        postRepository.save(post);
+
+        return postMapper.toPostResDto(post);
+    }
 }

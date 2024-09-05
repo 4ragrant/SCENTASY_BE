@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.post.dto;
 
 
+import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
 import io.swagger.v3.oas.annotations.info.Info;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostResDto {
+    private PerfumeDto perfume;
     private String title;
     private String content;
 
