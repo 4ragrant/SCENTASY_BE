@@ -71,5 +71,17 @@ public class PostController {
         return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
     }
 
+    @Operation(summary = "포스트 상세 조희", description = "포스트 상세 조회를 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "get particular post successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> getPost(@PathVariable("postId") Long postId) {
+        PostResDto postResDto  = postService.getPost(postId);
+        return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
+    }
 
 }

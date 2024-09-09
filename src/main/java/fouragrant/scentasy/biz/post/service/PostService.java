@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -70,6 +71,17 @@ public class PostService {
 
         postRepository.save(post);
 
+        return postMapper.toPostResDto(post);
+    }
+
+    public PostResDto getPost(Long postId) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isEmpty()) {
+            // 포스트가 없을 경우
+            log.warn(ErrorCode.POST_NOT_FOUND.getMessage());
+            throw new CommonException(ErrorCode.POST_NOT_FOUND);
+        }
+        Post post = optionalPost.get(); // Optional에서 Post 객체 추출
         return postMapper.toPostResDto(post);
     }
 }
