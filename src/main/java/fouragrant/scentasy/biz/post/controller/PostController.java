@@ -85,7 +85,7 @@ public class PostController {
     }
 
     @Operation(summary = "포스트 수정", description = "포스트 수정을 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "get particular post successfully",
+    @ApiResponse(responseCode = "0000", description = "modify post successfully",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PostReqDto.class)
@@ -97,4 +97,16 @@ public class PostController {
         return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
     }
 
+    @Operation(summary = "포스트 삭제", description = "포스트 삭제 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "delete post successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @DeleteMapping("/delete/{postId}/{memberId}")
+    public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId, @PathVariable("memberId") Long memberId) {
+        postService.deletePost(postId, memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000", "delete successfully"));
+    }
 }

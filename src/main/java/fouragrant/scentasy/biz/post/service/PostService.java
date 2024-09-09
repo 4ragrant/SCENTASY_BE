@@ -114,4 +114,25 @@ public class PostService {
 
         return postMapper.toPostResDto(post);
     }
+
+    public void deletePost(Long postId, Long memberId) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isEmpty()) {
+            // 포스트가 없을 경우
+            log.warn(ErrorCode.POST_NOT_FOUND.getMessage());
+            throw new CommonException(ErrorCode.POST_NOT_FOUND);
+        }
+        Post post = optionalPost.get(); // Optional에서 Post 객체 추출
+
+        Member member = memberService.findById(memberId);
+        // 회원이 없으면 예외 던짐
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        //회원과 작성자가 일치하지 않음 예외
+        if (!Objects.equals(post.getMember().getId(), member.getId())){
+            throw new CommonException(ErrorCode.MEMBER_NOT_SAME);
+        }
+        postRepository.delete(post);
+    }
 }
