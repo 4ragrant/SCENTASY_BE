@@ -44,7 +44,9 @@ public class PostController {
         List<PostResDto> postList = postService.getPostList();
         return ResponseEntity.ok(Response.createSuccess("0000",postList));
     }
-    @Operation(summary = "인기있는 포스트 리스트 조회", description = "인기있는 포스트 리스트 조회를 위한 메소드")
+
+
+    @Operation(summary = "인기 있는 포스트 리스트 조회", description = "인기있는 포스트 리스트 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get hot post list successfully",
             content = @Content(
                     mediaType = "application/json",
@@ -57,6 +59,7 @@ public class PostController {
         List<PostResDto> postList = postService.getTopPostList();
         return ResponseEntity.ok(Response.createSuccess("0000",postList));
     }
+
 
     @Operation(summary = "포스트 생성", description = "포스트 생성을 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "create post successfully",
@@ -71,6 +74,7 @@ public class PostController {
         return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
     }
 
+
     @Operation(summary = "포스트 상세 조희", description = "포스트 상세 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get particular post successfully",
             content = @Content(
@@ -83,6 +87,7 @@ public class PostController {
         PostResDto postResDto  = postService.getPost(postId);
         return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
     }
+
 
     @Operation(summary = "포스트 수정", description = "포스트 수정을 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "modify post successfully",
@@ -117,9 +122,22 @@ public class PostController {
                     schema = @Schema(implementation = PostReqDto.class)
             )
     )
-    @PostMapping("/postlike/{postId}/{memberId}")
-    public ResponseEntity<?> createPost(@PathVariable("postId") Long postId, @PathVariable("memberId") Long memberId) {
+    @PostMapping("/create-postlike/{postId}/{memberId}")
+    public ResponseEntity<?> createPostlike(@PathVariable("postId") Long postId, @PathVariable("memberId") Long memberId) {
         PostResDto postResDto = postService.createPostlike(postId, memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
+    }
+
+    @Operation(summary = "포스트 좋아요 삭제", description = "포스트 좋아요 삭제를 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "create post-like successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @DeleteMapping("/delete-postlike/{postId}/{memberId}")
+    public ResponseEntity<?> deletePostLike(@PathVariable("postId") Long postId, @PathVariable("memberId") Long memberId) {
+        PostResDto postResDto = postService.deletePostLike(postId, memberId);
         return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
     }
 }

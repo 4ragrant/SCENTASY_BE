@@ -172,4 +172,33 @@ public class PostService {
 
         return postMapper.toPostResDto(post);
     }
+
+    public PostResDto deletePostLike(Long postId, Long memberId) {
+        // 1. 포스트 조회
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isEmpty()) {
+            throw new CommonException(ErrorCode.POST_NOT_FOUND);
+        }
+        Post post = optionalPost.get();
+
+        // 2. 회원 조회
+        Member member = memberService.findById(memberId);
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+
+        // 3. 중복 좋아요 확인
+        Optional<PostLike> optionalPostLike = postLikeRepository.findByPostAndMember(post, member);
+        if (optionalPostLike.isEmpty()) {
+            throw new CommonException(ErrorCode.POST_LIKE_ALREADY_EXISTS);
+        }
+        PostLike postLike = optionalPostLike.get();
+
+        postLikeRepository.delete(postLike);
+
+        post.getLikeCount();
+        postRepository.save(post); // 좋아요수 감소 반환
+
+        return postMapper.toPostResDto(post);
+    }
 }
