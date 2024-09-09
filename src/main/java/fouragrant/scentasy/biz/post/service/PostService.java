@@ -80,6 +80,10 @@ public class PostService {
             throw new CommonException(ErrorCode.POST_NOT_FOUND);
         }
         Post post = optionalPost.get(); // Optional에서 Post 객체 추출
+        // 2. 조회수 증가
+        post.incrementViewCount();
+        postRepository.save(post);  // 증가된 조회수 저장
+
         return postMapper.toPostResDto(post);
     }
 
