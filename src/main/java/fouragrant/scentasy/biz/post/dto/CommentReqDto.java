@@ -1,5 +1,6 @@
 package fouragrant.scentasy.biz.post.dto;
 
+import fouragrant.scentasy.biz.post.domain.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
