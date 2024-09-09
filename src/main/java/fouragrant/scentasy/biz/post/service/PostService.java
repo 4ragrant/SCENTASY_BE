@@ -5,9 +5,11 @@ import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.perfume.service.PerfumeService;
 import fouragrant.scentasy.biz.post.domain.Post;
+import fouragrant.scentasy.biz.post.domain.PostLike;
 import fouragrant.scentasy.biz.post.dto.PostReqDto;
 import fouragrant.scentasy.biz.post.dto.PostResDto;
 import fouragrant.scentasy.biz.post.mapper.PostMapper;
+import fouragrant.scentasy.biz.post.repository.PostLikeRepository;
 import fouragrant.scentasy.biz.post.repository.PostRepository;
 import fouragrant.scentasy.common.exception.CommonException;
 import fouragrant.scentasy.common.exception.ErrorCode;
@@ -28,6 +30,7 @@ public class PostService {
     private final PostMapper postMapper;
     private final MemberService memberService;
     private final PerfumeService perfumeService;
+    private final PostLikeRepository postLikeRepository;
 
     public List<PostResDto> getPostList() {
         List<Post> posts = postRepository.findAll();
@@ -138,5 +141,35 @@ public class PostService {
             throw new CommonException(ErrorCode.MEMBER_NOT_SAME);
         }
         postRepository.delete(post);
+    }
+
+    public PostResDto createPostlike(Long postId, Long memberId) {
+        // 1. 포스트 조회
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isEmpty()) {
+            throw new CommonException(ErrorCode.POST_NOT_FOUND);
+        }
+        Post post = optionalPost.get();
+
+        // 2. 회원 조회
+        Member member = memberService.findById(memberId);
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+
+        // 3. 중복 좋아요 확인
+        Optional<PostLike> existingLike = postLikeRepository.findByPostAndMember(post, member);
+        if (existingLike.isPresent()) {
+            throw new CommonException(ErrorCode.POST_LIKE_ALREADY_EXISTS);
+        }
+
+        // 4. 좋아요 생성 및 저장
+        PostLike postLike = new PostLike(post, member);
+        postLikeRepository.save(postLike);
+
+        post.getLikeCount();
+        postRepository.save(post);  // 증가된 조회수 저장
+
+        return postMapper.toPostResDto(post);
     }
 }

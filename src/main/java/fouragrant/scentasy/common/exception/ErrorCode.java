@@ -22,10 +22,13 @@ public enum ErrorCode {
     // community
     POST_NOT_FOUND("4600", HttpStatus.NOT_FOUND, "포스트가 존재하지 않습니다."),
     MEMBER_NOT_FOUND("4601", HttpStatus.NOT_FOUND, "회원이 존재하지 않습니다."),
-    MEMBER_NOT_SAME("4602", HttpStatus.UNAUTHORIZED,"작성자와 일치하지 않습니다.");
+    MEMBER_NOT_SAME("4602", HttpStatus.UNAUTHORIZED,"작성자와 일치하지 않습니다."),
+    POST_LIKE_ALREADY_EXISTS("4603", HttpStatus.CONFLICT, "좋아요를 이미 눌렀습니다.");
 
 
     private final String code;
     private final HttpStatus httpStatus;
     private final String message;
+
+
 }

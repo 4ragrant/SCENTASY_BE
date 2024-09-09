@@ -29,6 +29,6 @@ public class Response<T> {
     }
 
     public static Response<?> createError(String code, String message) {
-        return new Response<>(ERROR_RESULT, code, null);
+        return new Response<>(ERROR_RESULT, code, message);
     }
 }
