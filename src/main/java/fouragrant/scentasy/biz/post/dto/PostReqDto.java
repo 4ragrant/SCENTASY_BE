@@ -1,6 +1,5 @@
 package fouragrant.scentasy.biz.post.dto;
 
-import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

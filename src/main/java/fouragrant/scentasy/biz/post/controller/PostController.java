@@ -84,4 +84,17 @@ public class PostController {
         return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
     }
 
+    @Operation(summary = "포스트 수정", description = "포스트 수정을 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "get particular post successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @PutMapping("/modify/{postId}/{memberId}/{perfumeId}")
+    public ResponseEntity<?> modifyPost(@PathVariable("postId") Long postId, @PathVariable("memberId") Long memberId, @PathVariable("perfumeId") Long perfumeId, @RequestBody PostReqDto postReqDto) {
+        PostResDto postResDto  = postService.modifyPost(postId, memberId, perfumeId, postReqDto);
+        return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
+    }
+
 }

@@ -13,12 +13,10 @@ import fouragrant.scentasy.common.exception.CommonException;
 import fouragrant.scentasy.common.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -82,6 +80,38 @@ public class PostService {
             throw new CommonException(ErrorCode.POST_NOT_FOUND);
         }
         Post post = optionalPost.get(); // Optional에서 Post 객체 추출
+        return postMapper.toPostResDto(post);
+    }
+
+    public PostResDto modifyPost(Long postId, Long memberId, Long perfumeId, PostReqDto postReqDto) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isEmpty()) {
+            // 포스트가 없을 경우
+            log.warn(ErrorCode.POST_NOT_FOUND.getMessage());
+            throw new CommonException(ErrorCode.POST_NOT_FOUND);
+        }
+        Post post = optionalPost.get(); // Optional에서 Post 객체 추출
+
+        Member member = memberService.findById(memberId);
+        // 회원이 없으면 예외 던짐
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        //회원과 작성자가 일치하지 않음 예외
+        if (!Objects.equals(post.getMember().getId(), member.getId())){
+            throw new CommonException(ErrorCode.MEMBER_NOT_SAME);
+        }
+
+        Perfume perfume = perfumeService.findPerfumeById(perfumeId);
+        // 향수가 없으면 예외 던짐
+        if (perfume == null) {
+            throw new CommonException(ErrorCode.PERFUME_NOT_FOUND);
+        }
+
+        post.updatePost(postReqDto.getTitle(), postReqDto.getContent(),perfume);
+
+        postRepository.save(post);
+
         return postMapper.toPostResDto(post);
     }
 }

@@ -97,4 +97,10 @@ public class Post extends BaseTimeEntity {
     public void incrementViewCount() {
         this.viewCount++;
     }
+
+    public void updatePost(String title, String content, Perfume perfume) {
+        this.title = title;       // 제목 수정
+        this.content = content;   // 내용 수정
+        this.perfume = perfume;   // 향수 정보 수정
+    }
 }

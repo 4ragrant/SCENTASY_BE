@@ -23,6 +23,4 @@ public class PostResDto {
     private int likeCount;
     private int viewCount;
     private int commentCount;
-
-
 }
