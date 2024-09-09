@@ -4,6 +4,7 @@ import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.post.domain.Post;
+import fouragrant.scentasy.biz.post.dto.CommentResDto;
 import fouragrant.scentasy.biz.post.dto.PostReqDto;
 import fouragrant.scentasy.biz.post.dto.PostResDto;
 import fouragrant.scentasy.biz.post.service.PostService;

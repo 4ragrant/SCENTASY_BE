@@ -20,6 +20,8 @@ public class PostMapper {
                 .perfume(PerfumeDto.fromEntity(perfume))
                 .title(post.getTitle())
                 .content(post.getContent())
+                .createdAt(post.getCreatedAt())
+                .updateAt(post.getUpdatedAt())
                 .nickname(extraInfo.getNickname())
                 .imageUrl(member.getImageUrl())
                 .likeCount(post.getLikeCount())

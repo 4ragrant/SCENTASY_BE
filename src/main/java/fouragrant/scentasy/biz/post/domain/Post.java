@@ -47,12 +47,6 @@ public class Post extends BaseTimeEntity {
     @Column(name = "view_count")
     private int viewCount;
 
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedAt;
 
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
