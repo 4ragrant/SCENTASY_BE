@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -87,5 +88,28 @@ public class CommentService {
     public List<CommentListResDto> getCommentList(Long postId) {
         List<Comment> parentComments = commentRepository.findByPostIdAndParentCommentIsNull(postId);
         return commentMapper.toDtoList(parentComments);
+    }
+
+    public CommentResDto modifyComment(Long commentId, Long memberId, CommentReqDto commentReqDto) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if (optionalComment.isEmpty()) {
+            throw new CommonException(ErrorCode.COMMENT_NOT_FOUND);
+        }
+        Comment comment = optionalComment.get();
+
+        Member member = memberService.findById(memberId);
+        // 회원이 없으면 예외 던짐
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        //회원과 작성자가 일치하지 않음 예외
+        if (!Objects.equals(comment.getMember().getId(), member.getId())){
+            throw new CommonException(ErrorCode.MEMBER_NOT_SAME);
+        }
+
+        comment.updateComment(commentReqDto.getContent());
+        commentRepository.save(comment);
+
+        return new CommentResDto(comment);
     }
 }

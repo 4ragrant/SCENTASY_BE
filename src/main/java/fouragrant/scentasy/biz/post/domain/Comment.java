@@ -2,6 +2,7 @@ package fouragrant.scentasy.biz.post.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.post.dto.CommentReqDto;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
@@ -56,5 +57,7 @@ public class Comment extends BaseTimeEntity {
         this.parentComment= parentComment;
     }
 
-
+    public void updateComment(String content) {
+        this.content=content;
+    }
 }

@@ -24,7 +24,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @Operation(summary = "댓글 생성", description = "댓글 생성을 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "create post successfully",
+    @ApiResponse(responseCode = "0000", description = "create comment successfully",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PostReqDto.class)
@@ -37,7 +37,7 @@ public class CommentController {
     }
 
     @Operation(summary = "대댓글 생성", description = "대댓글 생성을 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "create post successfully",
+    @ApiResponse(responseCode = "0000", description = "create second comment successfully",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PostReqDto.class)
@@ -50,7 +50,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 리스트 조회", description = "댓글 조회를 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "create post successfully",
+    @ApiResponse(responseCode = "0000", description = "get comment list successfully",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PostReqDto.class)
@@ -62,5 +62,16 @@ public class CommentController {
         return ResponseEntity.ok(Response.createSuccess("0000", commentListResDto));
     }
 
-
+    @Operation(summary = "댓글 수정", description = "댓글 수정을 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "create post successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @PutMapping("/rewrite/{commentId}/{memberId}")
+    public ResponseEntity<?> modifyComment(@PathVariable("commentId") Long commentId, @PathVariable("memberId") Long memberId, @RequestBody CommentReqDto commentReqDto) {
+        CommentResDto commentResDto = commentService.modifyComment(commentId, memberId, commentReqDto);
+        return ResponseEntity.ok(Response.createSuccess("0000", commentResDto));
+    }
 }
