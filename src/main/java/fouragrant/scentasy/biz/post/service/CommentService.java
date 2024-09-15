@@ -112,4 +112,23 @@ public class CommentService {
 
         return new CommentResDto(comment);
     }
+
+    public void deleteComment(Long commentId, Long memberId) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if (optionalComment.isEmpty()) {
+            throw new CommonException(ErrorCode.COMMENT_NOT_FOUND);
+        }
+        Comment comment = optionalComment.get();
+
+        Member member = memberService.findById(memberId);
+        // 회원이 없으면 예외 던짐
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        //회원과 작성자가 일치하지 않음 예외
+        if (!Objects.equals(comment.getMember().getId(), member.getId())){
+            throw new CommonException(ErrorCode.MEMBER_NOT_SAME);
+        }
+        commentRepository.delete(comment);
+    }
 }

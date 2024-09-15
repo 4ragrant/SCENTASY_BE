@@ -63,7 +63,7 @@ public class CommentController {
     }
 
     @Operation(summary = "댓글 수정", description = "댓글 수정을 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "create post successfully",
+    @ApiResponse(responseCode = "0000", description = "modify post successfully",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PostReqDto.class)
@@ -73,5 +73,18 @@ public class CommentController {
     public ResponseEntity<?> modifyComment(@PathVariable("commentId") Long commentId, @PathVariable("memberId") Long memberId, @RequestBody CommentReqDto commentReqDto) {
         CommentResDto commentResDto = commentService.modifyComment(commentId, memberId, commentReqDto);
         return ResponseEntity.ok(Response.createSuccess("0000", commentResDto));
+    }
+
+    @Operation(summary = "댓글 삭제", description = "댓글 삭제를 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "delete post successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @DeleteMapping("/delete/{commentId}/{memberId}")
+    public ResponseEntity<?> deleteComment(@PathVariable("commentId") Long commentId, @PathVariable("memberId") Long memberId) {
+        commentService.deleteComment(commentId, memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000", "delete successfully"));
     }
 }
