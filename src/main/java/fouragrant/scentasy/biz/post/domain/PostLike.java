@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 public class PostLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
-    private Long likeId;                    // 좋아요 ID
+    @Column(name = "id")
+    private Long id;                    // 좋아요 ID
 
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */

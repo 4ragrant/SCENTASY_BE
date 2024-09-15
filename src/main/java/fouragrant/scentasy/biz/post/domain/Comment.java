@@ -18,8 +18,8 @@ import java.util.List;
 public class Comment extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
-    private Long commentId;                 // 댓글 ID
+    @Column(name = "id")
+    private Long id;                 // 댓글 ID
 
     @Column(name = "content", nullable = false)
     private String content;                 // 댓글 내용
@@ -41,7 +41,7 @@ public class Comment extends BaseTimeEntity {
     private Comment parentComment; //부모 댓글
 
     @OneToMany(mappedBy = "parentComment", orphanRemoval = true)
-    private List<Comment> childrenComment = new ArrayList<>(); //자식 댓글들(대댓글)
+    private List<Comment> childComment = new ArrayList<>(); //자식 댓글들(대댓글)
 
 
     // 생성자
@@ -52,9 +52,7 @@ public class Comment extends BaseTimeEntity {
     }
 
     public Comment(Post post, Member member, Comment parentComment, String content) {
-        this.post = post;
-        this.member = member;
-        this.content = content;
+        this(post, member, content);
         this.parentComment= parentComment;
     }
 

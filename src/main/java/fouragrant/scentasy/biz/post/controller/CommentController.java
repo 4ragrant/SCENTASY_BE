@@ -1,9 +1,6 @@
 package fouragrant.scentasy.biz.post.controller;
 
-import fouragrant.scentasy.biz.post.dto.CommentReqDto;
-import fouragrant.scentasy.biz.post.dto.CommentResDto;
-import fouragrant.scentasy.biz.post.dto.PostReqDto;
-import fouragrant.scentasy.biz.post.dto.PostResDto;
+import fouragrant.scentasy.biz.post.dto.*;
 import fouragrant.scentasy.biz.post.service.CommentService;
 import fouragrant.scentasy.common.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @Tag(name = "Comment", description = "Comment 관련 api")
@@ -37,7 +36,7 @@ public class CommentController {
         return ResponseEntity.ok(Response.createSuccess("0000",commentResDto));
     }
 
-    @Operation(summary = "댓글 생성", description = "댓글 생성을 위한 메소드")
+    @Operation(summary = "대댓글 생성", description = "대댓글 생성을 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "create post successfully",
             content = @Content(
                     mediaType = "application/json",
@@ -49,4 +48,19 @@ public class CommentController {
         CommentResDto commentResDto = commentService.createSecondComment(postId, memberId, parentCommentId, commentReqDto);
         return ResponseEntity.ok(Response.createSuccess("0000",commentResDto));
     }
+
+    @Operation(summary = "댓글 리스트 조회", description = "댓글 조회를 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "create post successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @GetMapping("/{postId}")
+    public ResponseEntity<?> getCommentList(@PathVariable("postId") Long postId) {
+        List<CommentListResDto> commentListResDto = commentService.getCommentList(postId);
+        return ResponseEntity.ok(Response.createSuccess("0000", commentListResDto));
+    }
+
+
 }

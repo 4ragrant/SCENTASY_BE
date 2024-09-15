@@ -29,8 +29,8 @@ public class Post extends BaseTimeEntity {
     /* -------------------------------------------- */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Long postId;
+    @Column(name = "id")
+    private Long id;
 
     /* -------------------------------------------- */
     /* ------------ Information Column ------------ */
@@ -60,7 +60,7 @@ public class Post extends BaseTimeEntity {
     @JsonIgnore
     private Perfume perfume;  // 해당 게시물에 사용된 향수
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Comment> comments;
 
     @OneToMany(mappedBy = "post")

@@ -4,9 +4,11 @@ import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.post.domain.Comment;
 import fouragrant.scentasy.biz.post.domain.Post;
+import fouragrant.scentasy.biz.post.dto.CommentListResDto;
 import fouragrant.scentasy.biz.post.dto.CommentReqDto;
 import fouragrant.scentasy.biz.post.dto.CommentResDto;
 import fouragrant.scentasy.biz.post.dto.PostResDto;
+import fouragrant.scentasy.biz.post.mapper.CommentMapper;
 import fouragrant.scentasy.biz.post.repository.CommentRepository;
 import fouragrant.scentasy.biz.post.repository.PostRepository;
 import fouragrant.scentasy.common.exception.CommonException;
@@ -15,7 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,6 +28,7 @@ public class CommentService {
     private final PostRepository postRepository;
     private final MemberService memberService;
     private final CommentRepository commentRepository;
+    private final CommentMapper commentMapper;
 
 
     public CommentResDto createComment(Long postId, Long memberId, CommentReqDto commentReqDto) {
@@ -61,7 +66,8 @@ public class CommentService {
         if (member == null) {
             throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
         }
-
+        
+        // 부모 댓글 없으면 예외
         Comment parentComment = commentRepository.findById(parentCommentId)
                 .orElseThrow(() -> new CommonException(ErrorCode.COMMENT_NOT_FOUND));
 
@@ -70,5 +76,10 @@ public class CommentService {
         commentRepository.save(comment);
 
         return new CommentResDto(comment);
+    }
+
+    public List<CommentListResDto> getCommentList(Long postId) {
+        List<Comment> parentComments = commentRepository.findByPostIdAndParentCommentIsNull(postId);
+        return commentMapper.toDtoList(parentComments);
     }
 }
