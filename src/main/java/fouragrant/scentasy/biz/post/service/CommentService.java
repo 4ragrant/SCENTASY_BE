@@ -26,7 +26,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
 
-    public CommentResDto createComment(Long postId, Long memberId, Long parentCommentId, CommentReqDto commentReqDto) {
+    public CommentResDto createComment(Long postId, Long memberId, CommentReqDto commentReqDto) {
         Optional<Post> optionalPost = postRepository.findById(postId);
         if (optionalPost.isEmpty()) {
             // 포스트가 없을 경우
@@ -40,18 +40,33 @@ public class CommentService {
             throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
         }
 
-        // 부모 댓글 조회 (있다면)
-        Comment parentComment = null;
-        if (parentCommentId != null) {
-            parentComment = commentRepository.findById(parentCommentId)
-                    .orElseThrow(() -> new CommonException(ErrorCode.COMMENT_NOT_FOUND));
-        }
-
         Comment comment = new Comment(post, member, commentReqDto.getContent());
 
-        if (parentComment != null) {
-            comment.setParentComment(parentComment);
+        commentRepository.save(comment);
+
+        return new CommentResDto(comment);
+    }
+
+
+    public CommentResDto createSecondComment(Long postId, Long memberId, Long parentCommentId, CommentReqDto commentReqDto) {
+        Optional<Post> optionalPost = postRepository.findById(postId);
+        if (optionalPost.isEmpty()) {
+            // 포스트가 없을 경우
+            log.warn(ErrorCode.POST_NOT_FOUND.getMessage());
+            throw new CommonException(ErrorCode.POST_NOT_FOUND);
         }
+        Post post = optionalPost.get();
+        Member member = memberService.findById(memberId);
+        // 회원이 없으면 예외 던짐
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+
+        Comment parentComment = commentRepository.findById(parentCommentId)
+                .orElseThrow(() -> new CommonException(ErrorCode.COMMENT_NOT_FOUND));
+
+        Comment comment = new Comment(post, member, parentComment, commentReqDto.getContent());
+
         commentRepository.save(comment);
 
         return new CommentResDto(comment);

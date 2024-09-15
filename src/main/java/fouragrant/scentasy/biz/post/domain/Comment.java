@@ -51,8 +51,12 @@ public class Comment extends BaseTimeEntity {
         this.content = content;
     }
 
-    public void setParentComment(Comment parentComment) {
-        this.parentComment = parentComment;
+    public Comment(Post post, Member member, Comment parentComment, String content) {
+        this.post = post;
+        this.member = member;
+        this.content = content;
+        this.parentComment= parentComment;
     }
+
 
 }

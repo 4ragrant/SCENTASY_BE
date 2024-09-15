@@ -32,8 +32,21 @@ public class CommentController {
             )
     )
     @PostMapping("/write/{postId}/{memberId}")
-    public ResponseEntity<?> createComment(@PathVariable("postId") Long postId,@PathVariable("memberId") Long memberId, @RequestParam(required = false) Long parentCommentId, @RequestBody CommentReqDto commentReqDto) {
-        CommentResDto commentResDto = commentService.createComment(postId, memberId, parentCommentId, commentReqDto);
+    public ResponseEntity<?> createComment(@PathVariable("postId") Long postId,@PathVariable("memberId") Long memberId, @RequestBody CommentReqDto commentReqDto) {
+        CommentResDto commentResDto = commentService.createComment(postId, memberId, commentReqDto);
+        return ResponseEntity.ok(Response.createSuccess("0000",commentResDto));
+    }
+
+    @Operation(summary = "댓글 생성", description = "댓글 생성을 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "create post successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @PostMapping("/second-write/{postId}/{memberId}")
+    public ResponseEntity<?> createSecondComment(@PathVariable("postId") Long postId,@PathVariable("memberId") Long memberId, @RequestParam(required = false) Long parentCommentId, @RequestBody CommentReqDto commentReqDto) {
+        CommentResDto commentResDto = commentService.createSecondComment(postId, memberId, parentCommentId, commentReqDto);
         return ResponseEntity.ok(Response.createSuccess("0000",commentResDto));
     }
 }
