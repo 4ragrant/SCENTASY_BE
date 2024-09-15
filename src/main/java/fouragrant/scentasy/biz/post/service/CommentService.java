@@ -49,6 +49,9 @@ public class CommentService {
 
         commentRepository.save(comment);
 
+        post.incrementViewCount();
+        postRepository.save(post);
+
         return new CommentResDto(comment);
     }
 
@@ -74,6 +77,9 @@ public class CommentService {
         Comment comment = new Comment(post, member, parentComment, commentReqDto.getContent());
 
         commentRepository.save(comment);
+
+        post.incrementViewCount();
+        postRepository.save(post);
 
         return new CommentResDto(comment);
     }
