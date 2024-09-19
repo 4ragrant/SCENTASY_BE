@@ -87,4 +87,6 @@ public class CommentController {
         commentService.deleteComment(commentId, memberId);
         return ResponseEntity.ok(Response.createSuccess("0000", "delete successfully"));
     }
+
+
 }

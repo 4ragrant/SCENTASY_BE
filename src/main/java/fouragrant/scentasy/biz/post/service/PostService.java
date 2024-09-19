@@ -201,4 +201,21 @@ public class PostService {
 
         return postMapper.toPostResDto(post);
     }
+
+    public List<PostResDto> getHostPostList(Long memberId) {
+        Member member = memberService.findById(memberId);
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+
+        List<Post> posts = postRepository.findByMemberId(memberId);
+        if (posts.isEmpty()) {
+            // 포스트가 없을 경우
+            log.warn(ErrorCode.POST_NOT_FOUND.getMessage());
+            throw new CommonException(ErrorCode.POST_NOT_FOUND);
+        }
+        return posts.stream()
+                .map(postMapper::toPostResDto) //엔티티를 dto로 변환
+                .collect(Collectors.toList()); // 리스트 변환
+    }
 }

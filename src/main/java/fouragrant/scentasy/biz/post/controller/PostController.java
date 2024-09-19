@@ -141,4 +141,18 @@ public class PostController {
         PostResDto postResDto = postService.deletePostLike(postId, memberId);
         return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
     }
+
+    @Operation(summary = "사용자 포스트 리스트 조회", description = "사용자의 포스트 리스트 조회를 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "get host's post list successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
+    @GetMapping("/list/{memberId}")
+    public ResponseEntity<Response<List<PostResDto>>> getHostPostList(@PathVariable("memberId") Long memberId) {
+        List<PostResDto> postList = postService.getHostPostList(memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000",postList));
+    }
 }
