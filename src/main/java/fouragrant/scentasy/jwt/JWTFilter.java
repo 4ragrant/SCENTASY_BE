@@ -33,16 +33,20 @@ public class JWTFilter extends OncePerRequestFilter {
         String jwt = resolveToken(request);
 
         // 2. 블랙리스트 확인
-        if (jwt != null && jwtBlacklist.isTokenBlacklisted(jwt)) {
-            // 블랙리스트에 있는 토큰이면 CommonException 발생
-            throw new CommonException(ErrorCode.TOKEN_IN_BLACKLIST);
-        }
+        if (jwt != null) {
+            if (jwtBlacklist.isTokenBlacklisted(jwt)) {
+                throw new CommonException(ErrorCode.TOKEN_IN_BLACKLIST);
+            }
 
-        // 3. validateToken 으로 토큰 유효성 검사
-        // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
-        if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-            Authentication authentication = tokenProvider.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // 3. validateToken 으로 토큰 유효성 검사
+            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+                Authentication authentication = tokenProvider.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                System.out.println("Invalid Token"); // 유효성 검사 실패 로그
+            }
+        } else {
+            System.out.println("No Token Provided"); // 토큰이 없는 경우 로그
         }
 
         filterChain.doFilter(request, response);

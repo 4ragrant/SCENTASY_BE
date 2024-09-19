@@ -58,6 +58,9 @@ public class TokenProvider {
                     .signWith(key, SignatureAlgorithm.HS512)
                     .compact();
 
+            log.info("Generated Access Token: {}", accessToken); // 로그 추가
+            log.info("Generated Refresh Token: {}", refreshToken); // 로그 추가
+
             return TokenDto.builder()
                     .grantType(BEARER_TYPE)
                     .accessToken(accessToken)

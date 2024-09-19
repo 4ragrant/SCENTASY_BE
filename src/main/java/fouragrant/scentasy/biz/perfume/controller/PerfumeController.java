@@ -46,7 +46,7 @@ public class PerfumeController {
             )
     )
     @PostMapping("/{memberId}")
-    public ResponseEntity<?> createPerfume(@PathVariable Long memberId, @RequestBody PerfumeDto perfumeDto) {
+    public ResponseEntity<?> createPerfume(@PathVariable("memberId") Long memberId, @RequestBody PerfumeDto perfumeDto) {
         Member member = memberService.findById(memberId);
         perfumeService.createPerfume(perfumeDto, member);
 
