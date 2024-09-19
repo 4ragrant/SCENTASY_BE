@@ -2,6 +2,7 @@ package fouragrant.scentasy.biz.post.controller;
 
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
+import fouragrant.scentasy.biz.member.dto.MemberReqDto;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.post.domain.Post;
 import fouragrant.scentasy.biz.post.dto.CommentResDto;
@@ -40,6 +41,13 @@ public class PostController {
             )
     )
     @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "포스트 전체 조회 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
+            )
+    )
     @GetMapping("/list")
     public ResponseEntity<Response<List<PostResDto>>> getPostList() {
         List<PostResDto> postList = postService.getPostList();
@@ -55,6 +63,13 @@ public class PostController {
             )
     )
     @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "인기있는 포스트 3개 목록 조회 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
+            )
+    )
     @GetMapping("/list-top3")
     public ResponseEntity<Response<List<PostResDto>>> getTopPostList() {
         List<PostResDto> postList = postService.getTopPostList();
@@ -67,6 +82,13 @@ public class PostController {
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "포스트 생성 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
             )
     )
     @PostMapping("/write/{memberId}/{perfumeId}")
@@ -83,6 +105,13 @@ public class PostController {
                     schema = @Schema(implementation = PostReqDto.class)
             )
     )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "포스트 상세 조회 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
+            )
+    )
     @GetMapping("/{postId}")
     public ResponseEntity<?> getPost(@PathVariable("postId") Long postId) {
         PostResDto postResDto  = postService.getPost(postId);
@@ -95,6 +124,13 @@ public class PostController {
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "포스트 수정 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
             )
     )
     @PutMapping("/modify/{postId}/{memberId}/{perfumeId}")
@@ -110,6 +146,13 @@ public class PostController {
                     schema = @Schema(implementation = PostReqDto.class)
             )
     )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "포스트 삭제 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
+            )
+    )
     @DeleteMapping("/delete/{postId}/{memberId}")
     public ResponseEntity<?> deletePost(@PathVariable("postId") Long postId, @PathVariable("memberId") Long memberId) {
         postService.deletePost(postId, memberId);
@@ -123,6 +166,13 @@ public class PostController {
                     schema = @Schema(implementation = PostReqDto.class)
             )
     )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "포스트 좋아요 생성 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
+            )
+    )
     @PostMapping("/create-postlike/{postId}/{memberId}")
     public ResponseEntity<?> createPostlike(@PathVariable("postId") Long postId, @PathVariable("memberId") Long memberId) {
         PostResDto postResDto = postService.createPostlike(postId, memberId);
@@ -134,6 +184,13 @@ public class PostController {
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PostReqDto.class)
+            )
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "포스트 좋아요 삭제 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
             )
     )
     @DeleteMapping("/delete-postlike/{postId}/{memberId}")
@@ -150,6 +207,13 @@ public class PostController {
             )
     )
     @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "사용자 작성 포스트 조회 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
+            )
+    )
     @GetMapping("/list/{memberId}")
     public ResponseEntity<Response<List<PostResDto>>> getHostPostList(@PathVariable("memberId") Long memberId) {
         List<PostResDto> postList = postService.getHostPostList(memberId);
@@ -164,6 +228,13 @@ public class PostController {
             )
     )
     @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "사용자가 좋아요 누른 포스트 조회 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemberReqDto.class)
+            )
+    )
     @GetMapping("/like-list/{memberId}")
     public ResponseEntity<Response<List<PostResDto>>> getLikePostList(@PathVariable("memberId") Long memberId) {
         List<PostResDto> postList = postService.getLikePostList(memberId);
