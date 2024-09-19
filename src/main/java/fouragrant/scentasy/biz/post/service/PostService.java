@@ -218,4 +218,19 @@ public class PostService {
                 .map(postMapper::toPostResDto) //엔티티를 dto로 변환
                 .collect(Collectors.toList()); // 리스트 변환
     }
+
+    public List<PostResDto> getLikePostList(Long memberId) {
+        Member member = memberService.findById(memberId);
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+
+        List<Post> posts = postLikeRepository.findPostsLikedByMember(member);
+        if (posts.isEmpty()) {
+            throw new CommonException(ErrorCode.POST_LIKE_NO_EXISTS);
+        }
+        return posts.stream()
+                .map(postMapper::toPostResDto) //엔티티를 dto로 변환
+                .collect(Collectors.toList()); // 리스트 변환
+    }
 }
