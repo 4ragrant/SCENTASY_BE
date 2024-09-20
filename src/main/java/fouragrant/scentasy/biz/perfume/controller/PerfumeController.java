@@ -45,7 +45,7 @@ public class PerfumeController {
                     schema = @Schema(implementation = PerfumeDto.class)
             )
     )
-    @PostMapping("/{memberId}")
+    @PostMapping("/save/{memberId}")
     public ResponseEntity<?> createPerfume(@PathVariable Long memberId, @RequestBody PerfumeDto perfumeDto) {
         Member member = memberService.findById(memberId);
         perfumeService.createPerfume(perfumeDto, member);
@@ -65,7 +65,7 @@ public class PerfumeController {
                     schema = @Schema(implementation = PerfumeDto.class)
             )
     )
-    @GetMapping("/{perfumeId}")
+    @GetMapping("/detail/{perfumeId}")
     public ResponseEntity<?> getPerfume(@PathVariable Long perfumeId) {
         Perfume perfume = perfumeService.findPerfumeById(perfumeId);
         PerfumeDto perfumeDto = PerfumeDto.fromEntity(perfume);
@@ -85,7 +85,7 @@ public class PerfumeController {
                     schema = @Schema(implementation = Perfume.class)
             )
     )
-    @GetMapping("/perfume-list/{memberId}")
+    @GetMapping("/list/{memberId}")
     public ResponseEntity<?> getMemberPerfume(@PathVariable Long memberId) {
         List<Perfume> perfumes = perfumeService.findPerfumesByMemberId(memberId);
 
@@ -104,7 +104,7 @@ public class PerfumeController {
                     schema = @Schema(implementation = Perfume.class)
             )
     )
-    @GetMapping("/perfume-count/{memberId}")
+    @GetMapping("/count/{memberId}")
     public ResponseEntity<?> getMemberPerfumeCount(@PathVariable Long memberId) {
         int perfumeCount = perfumeService.countPerfumesByMemberId(memberId);
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeCount));
