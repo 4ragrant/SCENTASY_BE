@@ -85,10 +85,28 @@ public class PerfumeController {
                     schema = @Schema(implementation = Perfume.class)
             )
     )
-    @GetMapping("/member/{memberId}")
+    @GetMapping("/perfume-list/{memberId}")
     public ResponseEntity<?> getMemberPerfume(@PathVariable Long memberId) {
         List<Perfume> perfumes = perfumeService.findPerfumesByMemberId(memberId);
 
         return ResponseEntity.ok(Response.createSuccess("0000", perfumes));
+    }
+
+    @Operation(
+            summary = "전체 향수 개수 조회",
+            description = "특정 멤버의 전체 향수 개수 조회를 위한 메소드"
+    )
+    @ApiResponse(
+            responseCode = "0000",
+            description = "Perfume count retrieved successfully!",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Perfume.class)
+            )
+    )
+    @GetMapping("/perfume-count/{memberId}")
+    public ResponseEntity<?> getMemberPerfumeCount(@PathVariable Long memberId) {
+        int perfumeCount = perfumeService.countPerfumesByMemberId(memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000", perfumeCount));
     }
 }

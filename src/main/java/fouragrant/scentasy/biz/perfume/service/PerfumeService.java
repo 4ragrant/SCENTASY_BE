@@ -34,4 +34,9 @@ public class PerfumeService {
          return perfumeRepository.findByMemberId(memberId)
                  .orElseThrow(() -> new CommonException(ErrorCode.PERFUME_NOT_FOUND));
     }
+
+    // 멤버 ID로 향수 전체 개수 조회
+    public int countPerfumesByMemberId(Long memberId) {
+        return perfumeRepository.countByMemberId(memberId);
+    }
 }
