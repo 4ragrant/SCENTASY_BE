@@ -1,18 +1,10 @@
 package fouragrant.scentasy.biz.post.controller;
 
-import fouragrant.scentasy.biz.member.domain.Member;
-import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
-import fouragrant.scentasy.biz.member.dto.MemberReqDto;
-import fouragrant.scentasy.biz.member.service.MemberService;
-import fouragrant.scentasy.biz.post.domain.Post;
-import fouragrant.scentasy.biz.post.dto.CommentResDto;
 import fouragrant.scentasy.biz.post.dto.PostReqDto;
 import fouragrant.scentasy.biz.post.dto.PostResDto;
 import fouragrant.scentasy.biz.post.service.PostService;
 import fouragrant.scentasy.common.Response;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -22,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.List;
 
 @Slf4j
@@ -45,7 +36,7 @@ public class PostController {
             description = "포스트 전체 조회 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @GetMapping("/list")
@@ -67,7 +58,7 @@ public class PostController {
             description = "인기있는 포스트 3개 목록 조회 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @GetMapping("/list-top3")
@@ -88,7 +79,7 @@ public class PostController {
             description = "포스트 생성 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @PostMapping("/write/{memberId}/{perfumeId}")
@@ -109,7 +100,7 @@ public class PostController {
             description = "포스트 상세 조회 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @GetMapping("/{postId}")
@@ -130,7 +121,7 @@ public class PostController {
             description = "포스트 수정 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @PutMapping("/modify/{postId}/{memberId}/{perfumeId}")
@@ -150,7 +141,7 @@ public class PostController {
             description = "포스트 삭제 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @DeleteMapping("/delete/{postId}/{memberId}")
@@ -170,7 +161,7 @@ public class PostController {
             description = "포스트 좋아요 생성 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @PostMapping("/create-postlike/{postId}/{memberId}")
@@ -190,7 +181,7 @@ public class PostController {
             description = "포스트 좋아요 삭제 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @DeleteMapping("/delete-postlike/{postId}/{memberId}")
@@ -211,7 +202,7 @@ public class PostController {
             description = "사용자 작성 포스트 조회 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @GetMapping("/list/{memberId}")
@@ -232,7 +223,7 @@ public class PostController {
             description = "사용자가 좋아요 누른 포스트 조회 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @GetMapping("/like-list/{memberId}")
