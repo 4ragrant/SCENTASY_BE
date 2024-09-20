@@ -28,14 +28,14 @@ public class CommentController {
     @ApiResponse(responseCode = "0000", description = "create comment successfully",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = PostReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "댓글 생성 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @PostMapping("/write/{postId}/{memberId}")
@@ -48,14 +48,14 @@ public class CommentController {
     @ApiResponse(responseCode = "0000", description = "create second comment successfully",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = PostReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "대댓글 생성 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @PostMapping("/second-write/{postId}/{memberId}")
@@ -68,14 +68,14 @@ public class CommentController {
     @ApiResponse(responseCode = "0000", description = "get comment list successfully",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = PostReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "댓글 목록 조회 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @GetMapping("/{postId}")
@@ -88,14 +88,14 @@ public class CommentController {
     @ApiResponse(responseCode = "0000", description = "modify post successfully",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = PostReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "댓글 수정 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @PutMapping("/rewrite/{commentId}/{memberId}")
@@ -108,14 +108,14 @@ public class CommentController {
     @ApiResponse(responseCode = "0000", description = "delete post successfully",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = PostReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "댓글 삭제 요청 본문",
             required = true,
             content = @Content(
-                    schema = @Schema(implementation = MemberReqDto.class)
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @DeleteMapping("/delete/{commentId}/{memberId}")
