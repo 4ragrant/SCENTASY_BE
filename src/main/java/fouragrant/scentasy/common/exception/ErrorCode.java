@@ -28,8 +28,13 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND("4605", HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다."),
 
     //calendar
-    MEMO_NOT_FOUND("4700", HttpStatus.NOT_FOUND, "메모가 존재하지 않습니다." );
-
+    MEMO_NOT_FOUND("4700", HttpStatus.NOT_FOUND, "메모가 존재하지 않습니다." ),
+    
+    // file
+    FILE_UPLOAD_FAILED("4800", HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다."),
+    FILE_EMPTY("4801", HttpStatus.BAD_REQUEST, "파일이 비어 있습니다."),
+    FILE_SIZE_EXCEED("4802", HttpStatus.BAD_REQUEST, "파일 크기가 허용된 용량을 초과했습니다."),
+    UNSUPPORTED_FILE_TYPE("4803", HttpStatus.BAD_REQUEST, "지원되지 않는 파일 형식입니다.");
 
     private final String code;
     private final HttpStatus httpStatus;
