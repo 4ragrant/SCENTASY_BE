@@ -9,5 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface PerfumeRepository extends JpaRepository<Perfume, Long> {
-    Optional<List<Perfume>> findByMemberId(Long memberId);
+    List<Perfume> findByMemberId(Long memberId);
+    int countByMemberId(Long memberId);
 }

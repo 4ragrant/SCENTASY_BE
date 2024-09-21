@@ -31,7 +31,17 @@ public class PerfumeService {
 
     // 멤버 ID로 향수 전체 목록 조회
     public List<Perfume> findPerfumesByMemberId(Long memberId) {
-         return perfumeRepository.findByMemberId(memberId)
-                 .orElseThrow(() -> new CommonException(ErrorCode.PERFUME_NOT_FOUND));
+         List<Perfume> perfumes = perfumeRepository.findByMemberId(memberId);
+
+         if (perfumes.isEmpty()) {
+             throw new CommonException(ErrorCode.PERFUME_NOT_FOUND);
+         }
+
+         return perfumes;
+    }
+
+    // 멤버 ID로 향수 전체 개수 조회
+    public int countPerfumesByMemberId(Long memberId) {
+        return perfumeRepository.countByMemberId(memberId);
     }
 }

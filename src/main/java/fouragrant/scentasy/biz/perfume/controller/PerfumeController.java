@@ -45,7 +45,7 @@ public class PerfumeController {
                     schema = @Schema(implementation = PerfumeDto.class)
             )
     )
-    @PostMapping("/{memberId}")
+    @PostMapping("/save/{memberId}")
     public ResponseEntity<?> createPerfume(@PathVariable("memberId") Long memberId, @RequestBody PerfumeDto perfumeDto) {
         Member member = memberService.findById(memberId);
         perfumeService.createPerfume(perfumeDto, member);
@@ -65,7 +65,7 @@ public class PerfumeController {
                     schema = @Schema(implementation = PerfumeDto.class)
             )
     )
-    @GetMapping("/{perfumeId}")
+    @GetMapping("/detail/{perfumeId}")
     public ResponseEntity<?> getPerfume(@PathVariable Long perfumeId) {
         Perfume perfume = perfumeService.findPerfumeById(perfumeId);
         PerfumeDto perfumeDto = PerfumeDto.fromEntity(perfume);
@@ -85,10 +85,28 @@ public class PerfumeController {
                     schema = @Schema(implementation = Perfume.class)
             )
     )
-    @GetMapping("/member/{memberId}")
+    @GetMapping("/list/{memberId}")
     public ResponseEntity<?> getMemberPerfume(@PathVariable Long memberId) {
         List<Perfume> perfumes = perfumeService.findPerfumesByMemberId(memberId);
 
         return ResponseEntity.ok(Response.createSuccess("0000", perfumes));
+    }
+
+    @Operation(
+            summary = "전체 향수 개수 조회",
+            description = "특정 멤버의 전체 향수 개수 조회를 위한 메소드"
+    )
+    @ApiResponse(
+            responseCode = "0000",
+            description = "Perfume count retrieved successfully!",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Perfume.class)
+            )
+    )
+    @GetMapping("/count/{memberId}")
+    public ResponseEntity<?> getMemberPerfumeCount(@PathVariable Long memberId) {
+        int perfumeCount = perfumeService.countPerfumesByMemberId(memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000", perfumeCount));
     }
 }
