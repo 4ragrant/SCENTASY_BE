@@ -171,7 +171,7 @@ public class PostController {
     }
 
     @Operation(summary = "포스트 좋아요 삭제", description = "포스트 좋아요 삭제를 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "create post-like successfully",
+    @ApiResponse(responseCode = "0000", description = "delete post-like successfully",
             content = @Content(
                     mediaType = "application/json",
                     schema = @Schema(implementation = PostReqDto.class)
@@ -186,8 +186,8 @@ public class PostController {
     )
     @DeleteMapping("/delete-postlike/{postId}/{memberId}")
     public ResponseEntity<?> deletePostLike(@PathVariable("postId") Long postId, @PathVariable("memberId") Long memberId) {
-        PostResDto postResDto = postService.deletePostLike(postId, memberId);
-        return ResponseEntity.ok(Response.createSuccess("0000",postResDto));
+        postService.deletePostLike(postId, memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000","delete post-like successfully"));
     }
 
     @Operation(summary = "사용자 포스트 리스트 조회", description = "사용자의 포스트 리스트 조회를 위한 메소드")
