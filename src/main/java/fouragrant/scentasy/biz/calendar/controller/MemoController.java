@@ -40,4 +40,23 @@ public class MemoController {
         MemoDto memoResDto  = memoService.createMemo(memberId, perfumeId, memoDto.content());
         return ResponseEntity.ok(Response.createSuccess("0000",memoResDto));
     }
+    @Operation(summary = "메모 조회", description = "메모 조회를 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "get memo successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MemoDto.class)
+            )
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "메모 조회 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemoDto.class)
+            )
+    )
+    @GetMapping("/get/{memoId}")
+    public ResponseEntity<?> getMemo(@PathVariable("memoId") Long memoId){
+        MemoDto memoDto  = memoService.getMemo(memoId);
+        return ResponseEntity.ok(Response.createSuccess("0000",memoDto));
+    }
 }

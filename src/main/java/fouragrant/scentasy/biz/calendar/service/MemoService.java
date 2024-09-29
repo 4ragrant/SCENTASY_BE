@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static fouragrant.scentasy.biz.calendar.dto.MemoDto.toMemoDto;
 
 @Slf4j
@@ -39,6 +41,16 @@ public class MemoService {
         Memo memo = new Memo(content, member, perfume);
 
         memoRepository.save(memo);
+
+        return toMemoDto(memo);
+    }
+
+    public MemoDto getMemo(Long memoId) {
+        Optional<Memo> memoOptional = memoRepository.findById(memoId);
+        if (memoOptional.isEmpty()){
+            throw new CommonException(ErrorCode.MEMO_NOT_FOUND);
+        }
+        Memo memo = memoOptional.get();
 
         return toMemoDto(memo);
     }
