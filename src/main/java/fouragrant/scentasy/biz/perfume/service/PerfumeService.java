@@ -90,7 +90,7 @@ public class PerfumeService {
                 for (int i = 0; i < notesList.size(); i++) {
                     if (notesList.get(i) == 1) {
                         // 매핑 리스트를 사용하여 Scent 이름을 가져옴
-                        selectedScents.add(SCENT_MAPPING.get(i).name());
+                        selectedScents.add(SCENT_MAPPING.get(i).getDescription());
                     }
                 }
                 log.info("Selected perfume notes: {}", selectedScents); // 선택된 향수 노트 로그 출력
