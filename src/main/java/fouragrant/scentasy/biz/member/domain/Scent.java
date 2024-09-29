@@ -2,6 +2,9 @@ package fouragrant.scentasy.biz.member.domain;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Getter
 public enum Scent {
     AQUAL("아쿠아"),
@@ -38,4 +41,12 @@ public enum Scent {
     private final String description;
 
     Scent(String description) {this.description = description;}
+
+    public static final List<Scent> SCENT_MAPPING = Arrays.asList(
+            AQUAL, BERGAMOT, MINT, LEMON, GRAPEFRUIT, PEACH, THYME, FIG,
+            BLACKCHERRY, GREEN, FREESIA, ROSE, PEPPER, ROSEMARY, MUGUET,
+            LILYOFTHEVALLEY, MAGNOLIA, OCEAN, BLACKCURRANT, MUSK, VANILLA,
+            PATCHOULI, SANDALWOOD, ALDEHYDE, LEATHER, CEDAR, BLUEMARIN,
+            AMBER, FRANKINCENSE, HINOKI
+    );
 }
