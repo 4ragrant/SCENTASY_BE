@@ -54,4 +54,24 @@ public class MemoService {
 
         return toMemoDto(memo);
     }
+
+    public void deleteMemo(Long memoId, Long memberId) {
+        Optional<Memo> memoOptional = memoRepository.findById(memoId);
+        if (memoOptional.isEmpty()){
+            throw new CommonException(ErrorCode.MEMO_NOT_FOUND);
+        }
+        Memo memo = memoOptional.get();
+
+        Member member = memberService.findById(memberId);
+        // 회원이 없으면 예외 던짐
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
+        // 회원이 다르면 예외 던짐
+        if (member != memo.getMember()) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_SAME);
+        }
+
+        memoRepository.delete(memo);
+    }
 }

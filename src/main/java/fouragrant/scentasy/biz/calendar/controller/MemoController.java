@@ -59,4 +59,23 @@ public class MemoController {
         MemoDto memoDto  = memoService.getMemo(memoId);
         return ResponseEntity.ok(Response.createSuccess("0000",memoDto));
     }
+    @Operation(summary = "메모 삭제", description = "메모 삭제를 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "delete memo successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MemoDto.class)
+            )
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "메모 삭제 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemoDto.class)
+            )
+    )
+    @DeleteMapping("/delete/{memoId}/{memberId}")
+    public ResponseEntity<?> deleteMemo(@PathVariable("memoId") Long memoId, @PathVariable("memoId") Long memberId){
+        memoService.deleteMemo(memoId, memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000","delete successfully"));
+    }
 }
