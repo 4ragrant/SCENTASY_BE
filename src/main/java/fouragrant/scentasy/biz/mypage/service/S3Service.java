@@ -20,7 +20,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class S3Service {
     private final AmazonS3 amazonS3;
-    private final String DIR_NAME = "scentasy";
+    private final String DIR_NAME = "profiles";
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
@@ -36,7 +36,7 @@ public class S3Service {
         File file = convertMultiPartToFile(multipartFile);
 
         // S3에 업로드
-        String newFileName = DIR_NAME + "/" + fileName + getExtension(multipartFile.getOriginalFilename());
+        String newFileName = DIR_NAME + "/" + fileName + getExtension(originalFileName);
         String uploadImageUrl = uploadFileToS3(newFileName, file);
 
         // 로컬 파일 삭제

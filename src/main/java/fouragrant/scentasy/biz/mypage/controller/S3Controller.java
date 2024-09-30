@@ -23,16 +23,13 @@ public class S3Controller {
     private final S3Service s3Service;
     private final MemberService memberService;
 
-    @PostMapping("/image")
+    // 프로필 사진 등록
+    @PostMapping("/profile-image")
     public ResponseEntity<?> uploadProfileImage(
             @RequestParam("memberId") Long memberId,
-            @RequestParam("file") MultipartFile file ) throws IOException {
+            @RequestParam("file") MultipartFile file) throws IOException {
         Member member = memberService.updateProfileImage(memberId, file);
         return ResponseEntity.ok(Response.createSuccess("0000", member.getImageUrl()));
     }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-        return ResponseEntity.ok(Response.createSuccess("0000", "테스트"));
-    }
+    
 }
