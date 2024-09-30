@@ -60,10 +60,10 @@ public class Post extends BaseTimeEntity {
     @JsonIgnore
     private Perfume perfume;  // 해당 게시물에 사용된 향수
 
-    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Comment> comments;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<PostLike> postLikes;
 
     // 생성자
