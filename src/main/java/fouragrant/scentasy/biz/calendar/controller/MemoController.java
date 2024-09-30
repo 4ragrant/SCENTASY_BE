@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @Tag(name = "Memo", description = "Memo 관련 api")
 @RestController
@@ -59,6 +61,28 @@ public class MemoController {
         MemoDto memoDto  = memoService.getMemo(memoId);
         return ResponseEntity.ok(Response.createSuccess("0000",memoDto));
     }
+
+    @Operation(summary = "향수별 메모 리스트 조회", description = "향수별 메모 리스트 조회를 위한 메소드")
+    @ApiResponse(responseCode = "0000", description = "get memo successfully",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MemoDto.class)
+            )
+    )
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "향수별 메모 리스트 조회 요청 본문",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = MemoDto.class)
+            )
+    )
+    @GetMapping("/get-list/{perfumeId}")
+    public ResponseEntity<?> getMemoList(@PathVariable("perfumeId") Long perfumeId){
+        List<MemoDto> memoDtoList  = memoService.getMemoList(perfumeId);
+        return ResponseEntity.ok(Response.createSuccess("0000",memoDtoList));
+    }
+
+
     @Operation(summary = "메모 삭제", description = "메모 삭제를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "delete memo successfully",
             content = @Content(

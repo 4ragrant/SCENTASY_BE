@@ -13,7 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static fouragrant.scentasy.biz.calendar.dto.MemoDto.toMemoDto;
 
@@ -55,6 +57,16 @@ public class MemoService {
         return toMemoDto(memo);
     }
 
+    public List<MemoDto> getMemoList(Long perfumeId) {
+        List<Memo> memoList = memoRepository.findByPerfume_PerfumeId(perfumeId);
+        if(memoList == null){
+            throw new CommonException(ErrorCode.MEMO_NOT_FOUND);
+        }
+        return memoList.stream()
+                .map(MemoDto::toMemoDto)
+                .collect(Collectors.toList());
+    }
+
     public void deleteMemo(Long memoId, Long memberId) {
         Optional<Memo> memoOptional = memoRepository.findById(memoId);
         if (memoOptional.isEmpty()){
@@ -74,4 +86,7 @@ public class MemoService {
 
         memoRepository.delete(memo);
     }
+
+
+
 }
