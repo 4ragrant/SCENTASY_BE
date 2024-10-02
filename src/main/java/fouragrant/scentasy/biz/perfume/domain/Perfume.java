@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.perfume.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import fouragrant.scentasy.biz.calendar.domain.Memo;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.Scent;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
@@ -50,4 +51,7 @@ public class Perfume extends BaseTimeEntity {
     @CollectionTable(name = "perfume_notes", joinColumns = @JoinColumn(name = "perfume_id"))
     @Column(name = "notes")
     private List<Scent> notes;
+
+    @OneToMany(mappedBy = "perfume", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Memo> memos;
 }

@@ -25,7 +25,10 @@ public enum ErrorCode {
     MEMBER_NOT_SAME("4602", HttpStatus.UNAUTHORIZED,"작성자와 일치하지 않습니다."),
     POST_LIKE_ALREADY_EXISTS("4603", HttpStatus.CONFLICT, "좋아요를 이미 눌렀습니다."),
     POST_LIKE_NO_EXISTS("4604", HttpStatus.UNAUTHORIZED, "좋아요를 누루지 않았습니다."),
-    COMMENT_NOT_FOUND("4605", HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다.");
+    COMMENT_NOT_FOUND("4605", HttpStatus.NOT_FOUND, "댓글이 존재하지 않습니다."),
+
+    //calendar
+    MEMO_NOT_FOUND("4700", HttpStatus.NOT_FOUND, "메모가 존재하지 않습니다." );
 
 
     private final String code;
