@@ -98,7 +98,7 @@ public class MemoController {
             )
     )
     @DeleteMapping("/delete/{memoId}/{memberId}")
-    public ResponseEntity<?> deleteMemo(@PathVariable("memoId") Long memoId, @PathVariable("memoId") Long memberId){
+    public ResponseEntity<?> deleteMemo(@PathVariable("memoId") Long memoId, @PathVariable("memberId") Long memberId){
         memoService.deleteMemo(memoId, memberId);
         return ResponseEntity.ok(Response.createSuccess("0000","delete successfully"));
     }
