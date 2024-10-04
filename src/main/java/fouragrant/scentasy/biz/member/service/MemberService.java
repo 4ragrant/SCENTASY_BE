@@ -42,7 +42,7 @@ public class MemberService {
                 .orElseThrow(() -> new CommonException(ErrorCode.FAILURE_LOGIN));
     }
 
-    public Member updateProfileImage(Long memberId, MultipartFile file) throws IOException {
+    public Member uploadProfileImage(Long memberId, MultipartFile file) throws IOException {
         if (file == null || file.isEmpty() || memberId == null) {
             throw new CommonException(ErrorCode.MISSING_PARAMETER);
         }

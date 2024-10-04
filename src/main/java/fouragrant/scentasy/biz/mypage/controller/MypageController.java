@@ -1,4 +1,4 @@
-package fouragrant.scentasy.biz.mypage;
+package fouragrant.scentasy.biz.mypage.controller;
 
 import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
