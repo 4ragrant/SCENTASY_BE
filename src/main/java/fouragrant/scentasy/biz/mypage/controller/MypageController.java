@@ -69,7 +69,7 @@ public class MypageController {
                     schema = @Schema(implementation = ExtraInfoReqDto.class)
             )
     )
-    @PatchMapping("/extra-info/{memberId}")
+    @PatchMapping("/{memberId}")
     public ResponseEntity<?> updateExtraInfo(@PathVariable Long memberId, @Validated @RequestBody ExtraInfoReqDto extraInfoReqDto) {
         Member member = memberService.findById(memberId);
         ExtraInfo updatedExtraInfo = extraInfoService.updateExtraInfo(memberId, extraInfoReqDto, member);
