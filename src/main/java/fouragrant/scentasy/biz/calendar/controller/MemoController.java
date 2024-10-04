@@ -2,6 +2,7 @@ package fouragrant.scentasy.biz.calendar.controller;
 
 import fouragrant.scentasy.biz.calendar.dto.MemoDto;
 import fouragrant.scentasy.biz.calendar.service.MemoService;
+import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.common.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,13 +31,6 @@ public class MemoController {
                     schema = @Schema(implementation = MemoDto.class)
             )
     )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "메모 생성 요청 본문",
-            required = true,
-            content = @Content(
-                    schema = @Schema(implementation = MemoDto.class)
-            )
-    )
     @PostMapping("/write/{memberId}/{perfumeId}")
     public ResponseEntity<?> createMemo(@PathVariable("memberId") Long memberId, @PathVariable("perfumeId") Long perfumeId, @RequestBody MemoDto memoDto){
         MemoDto memoResDto  = memoService.createMemo(memberId, perfumeId, memoDto.content());
@@ -46,13 +40,6 @@ public class MemoController {
     @ApiResponse(responseCode = "0000", description = "get memo successfully",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = MemoDto.class)
-            )
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "메모 조회 요청 본문",
-            required = true,
-            content = @Content(
                     schema = @Schema(implementation = MemoDto.class)
             )
     )
@@ -69,13 +56,6 @@ public class MemoController {
                     schema = @Schema(implementation = MemoDto.class)
             )
     )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "향수별 메모 리스트 조회 요청 본문",
-            required = true,
-            content = @Content(
-                    schema = @Schema(implementation = MemoDto.class)
-            )
-    )
     @GetMapping("/get-list/{perfumeId}")
     public ResponseEntity<?> getMemoList(@PathVariable("perfumeId") Long perfumeId){
         List<MemoDto> memoDtoList  = memoService.getMemoList(perfumeId);
@@ -86,15 +66,7 @@ public class MemoController {
     @Operation(summary = "메모 삭제", description = "메모 삭제를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "delete memo successfully",
             content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = MemoDto.class)
-            )
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "메모 삭제 요청 본문",
-            required = true,
-            content = @Content(
-                    schema = @Schema(implementation = MemoDto.class)
+                    mediaType = "application/json"
             )
     )
     @DeleteMapping("/delete/{memoId}/{memberId}")
