@@ -30,13 +30,6 @@ public class MemoController {
                     schema = @Schema(implementation = MemoDto.class)
             )
     )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "메모 생성 요청 본문",
-            required = true,
-            content = @Content(
-                    schema = @Schema(implementation = MemoDto.class)
-            )
-    )
     @PostMapping("/write/{memberId}/{perfumeId}")
     public ResponseEntity<?> createMemo(@PathVariable("memberId") Long memberId, @PathVariable("perfumeId") Long perfumeId, @RequestBody MemoDto memoDto){
         MemoDto memoResDto  = memoService.createMemo(memberId, perfumeId, memoDto.content());
@@ -45,15 +38,7 @@ public class MemoController {
     @Operation(summary = "메모 조회", description = "메모 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get memo successfully",
             content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = MemoDto.class)
-            )
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "메모 조회 요청 본문",
-            required = true,
-            content = @Content(
-                    schema = @Schema(implementation = MemoDto.class)
+                    mediaType = "application/json"
             )
     )
     @GetMapping("/get/{memoId}")
@@ -65,15 +50,7 @@ public class MemoController {
     @Operation(summary = "향수별 메모 리스트 조회", description = "향수별 메모 리스트 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get memo successfully",
             content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = MemoDto.class)
-            )
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "향수별 메모 리스트 조회 요청 본문",
-            required = true,
-            content = @Content(
-                    schema = @Schema(implementation = MemoDto.class)
+                    mediaType = "application/json"
             )
     )
     @GetMapping("/get-list/{perfumeId}")
@@ -86,15 +63,7 @@ public class MemoController {
     @Operation(summary = "메모 삭제", description = "메모 삭제를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "delete memo successfully",
             content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = MemoDto.class)
-            )
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "메모 삭제 요청 본문",
-            required = true,
-            content = @Content(
-                    schema = @Schema(implementation = MemoDto.class)
+                    mediaType = "application/json"
             )
     )
     @DeleteMapping("/delete/{memoId}/{memberId}")
