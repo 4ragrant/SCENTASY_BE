@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -79,5 +81,16 @@ public class S3Service {
         String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase();
 
         return fileExtension.equals("jpg") || fileExtension.equals("png");
+    }
+
+    public List<String> getScentImages(List<String> scentNames) {
+        List<String> imageUrls = new ArrayList<>();
+
+        for (String scent : scentNames) {
+            String imageUrl = amazonS3.getUrl(bucket, "perfumes/" + scent + ".jpg").toString();
+            imageUrls.add(imageUrl);
+        }
+
+        return imageUrls;
     }
 }

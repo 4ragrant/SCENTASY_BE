@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.parser.Entity;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -31,5 +33,11 @@ public class S3Controller {
         Member member = memberService.updateProfileImage(memberId, file);
         return ResponseEntity.ok(Response.createSuccess("0000", member.getImageUrl()));
     }
-    
+
+    // 향기 사진 조회
+    @GetMapping("/scent-images")
+    public ResponseEntity<?> getScentImages(@RequestParam("scents") List<String> scents) {
+        List<String> imageUrls = s3Service.getScentImages(scents);
+        return ResponseEntity.ok(Response.createSuccess("0000", imageUrls));
+    }
 }
