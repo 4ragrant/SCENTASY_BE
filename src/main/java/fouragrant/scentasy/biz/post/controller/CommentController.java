@@ -53,7 +53,8 @@ public class CommentController {
     @Operation(summary = "댓글 리스트 조회", description = "댓글 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get comment list successfully",
             content = @Content(
-                    mediaType = "application/json"
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = CommentReqDto.class)
             )
     )
     @GetMapping("/{postId}")

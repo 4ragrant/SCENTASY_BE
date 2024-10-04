@@ -2,6 +2,7 @@ package fouragrant.scentasy.biz.calendar.controller;
 
 import fouragrant.scentasy.biz.calendar.dto.MemoDto;
 import fouragrant.scentasy.biz.calendar.service.MemoService;
+import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.common.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -38,7 +39,8 @@ public class MemoController {
     @Operation(summary = "메모 조회", description = "메모 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get memo successfully",
             content = @Content(
-                    mediaType = "application/json"
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MemoDto.class)
             )
     )
     @GetMapping("/get/{memoId}")
@@ -50,7 +52,8 @@ public class MemoController {
     @Operation(summary = "향수별 메모 리스트 조회", description = "향수별 메모 리스트 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get memo successfully",
             content = @Content(
-                    mediaType = "application/json"
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = MemoDto.class)
             )
     )
     @GetMapping("/get-list/{perfumeId}")

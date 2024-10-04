@@ -27,7 +27,8 @@ public class PostController {
     @Operation(summary = "포스트 리스트 조회", description = "포스트 리스트 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get post list successfully",
             content = @Content(
-                    mediaType = "application/json"
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
@@ -41,7 +42,8 @@ public class PostController {
     @Operation(summary = "인기 있는 포스트 리스트 조회", description = "인기있는 포스트 리스트 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get hot post list successfully",
             content = @Content(
-                    mediaType = "application/json"
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
@@ -69,7 +71,8 @@ public class PostController {
     @Operation(summary = "포스트 상세 조희", description = "포스트 상세 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get particular post successfully",
             content = @Content(
-                    mediaType = "application/json"
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @GetMapping("/{postId}")
@@ -132,7 +135,8 @@ public class PostController {
     @Operation(summary = "사용자 포스트 리스트 조회", description = "사용자의 포스트 리스트 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get host's post list successfully",
             content = @Content(
-                    mediaType = "application/json"
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
@@ -145,7 +149,8 @@ public class PostController {
     @Operation(summary = "사용자 좋아요 포스트 리스트 조회", description = "사용자가 좋아요를 누른 포스트 리스트 조회를 위한 메소드")
     @ApiResponse(responseCode = "0000", description = "get host's liked-post list successfully",
             content = @Content(
-                    mediaType = "application/json"
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PostReqDto.class)
             )
     )
     @ApiResponse(responseCode = "4500", description = "포스트가 존재하지 않습니다.")
