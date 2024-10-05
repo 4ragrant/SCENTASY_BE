@@ -1,6 +1,10 @@
 spring:
   application:
     name: application-dev
+  servlet:
+    multipart:
+      maxFileSize: 10MB
+      maxRequestSize: 30MB
 
   jpa:
     hibernate:
