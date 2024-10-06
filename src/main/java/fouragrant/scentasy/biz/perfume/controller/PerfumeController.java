@@ -47,8 +47,8 @@ public class PerfumeController {
             )
     )
     @PostMapping
-    public ResponseEntity<?> createPerfume(@RequestBody PerfumeDto perfumeDto, @AuthenticationPrincipal Member member) {
-        perfumeService.createPerfume(perfumeDto, member);
+    public ResponseEntity<?> savePerfume(@RequestBody PerfumeDto perfumeDto, @AuthenticationPrincipal Member member) {
+        perfumeService.savePerfume(perfumeDto, member);
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeDto));
     }
 
@@ -65,7 +65,7 @@ public class PerfumeController {
             )
     )
     @GetMapping("/{perfumeId}")
-    public ResponseEntity<?> getPerfume(@PathVariable Long perfumeId) {
+    public ResponseEntity<?> getPerfumeDetails(@PathVariable Long perfumeId) {
         Perfume perfume = perfumeService.findPerfumeById(perfumeId);
         PerfumeDto perfumeDto = PerfumeDto.fromEntity(perfume);
 
@@ -85,8 +85,8 @@ public class PerfumeController {
             )
     )
     @GetMapping
-    public ResponseEntity<?> getMemberPerfume(@AuthenticationPrincipal Member member) {
-        List<Perfume> perfumes = perfumeService.findPerfumesByMemberId(member);
+    public ResponseEntity<?> getMemberPerfumes(@AuthenticationPrincipal Member member) {
+        List<Perfume> perfumes = perfumeService.getMemberPerfumes(member);
         return ResponseEntity.ok(Response.createSuccess("0000", perfumes));
     }
 
@@ -104,7 +104,7 @@ public class PerfumeController {
     )
     @GetMapping("/count")
     public ResponseEntity<?> getMemberPerfumeCount(@AuthenticationPrincipal Member member) {
-        int perfumeCount = perfumeService.countPerfumesByMemberId(member);
+        int perfumeCount = perfumeService.getMemberPerfumeCount(member);
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeCount));
     }
 

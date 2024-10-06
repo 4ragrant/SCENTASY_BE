@@ -30,7 +30,7 @@ public class PerfumeService {
     private String flaskUrl; // 필드 추가
 
     // 생성된 향수 저장
-    public Perfume createPerfume(PerfumeDto perfumeDto, Member member) {
+    public Perfume savePerfume(PerfumeDto perfumeDto, Member member) {
         validateMember(member);
         Perfume perfume = PerfumeDto.fromDto(perfumeDto, member);
 
@@ -44,7 +44,7 @@ public class PerfumeService {
     }
 
     // 멤버 향수 전체 목록 조회
-    public List<Perfume> findPerfumesByMemberId(Member member) {
+    public List<Perfume> getMemberPerfumes(Member member) {
         validateMember(member);
         List<Perfume> perfumes = perfumeRepository.findByMemberId(member.getId());
 
@@ -55,8 +55,8 @@ public class PerfumeService {
         return perfumes;
     }
 
-    // 멤버 ID로 향수 전체 개수 조회
-    public int countPerfumesByMemberId(Member member) {
+    // 멤버 향수 전체 개수 조회
+    public int getMemberPerfumeCount(Member member) {
         validateMember(member);
 
         return perfumeRepository.countByMemberId(member.getId());
