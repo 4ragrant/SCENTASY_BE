@@ -1,8 +1,6 @@
 package fouragrant.scentasy.biz.perfume.controller;
 
-import fouragrant.scentasy.biz.member.domain.Member;
-import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
-import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
+import fouragrant.scentasy.biz.member.CustomUserDetails;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
@@ -15,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,10 +44,10 @@ public class PerfumeController {
                     schema = @Schema(implementation = PerfumeDto.class)
             )
     )
-    @PostMapping("/save/{memberId}")
-    public ResponseEntity<?> createPerfume(@PathVariable("memberId") Long memberId, @RequestBody PerfumeDto perfumeDto) {
-        Member member = memberService.findById(memberId);
-        perfumeService.createPerfume(perfumeDto, member);
+    @PostMapping
+    public ResponseEntity<?> savePerfume(@RequestBody PerfumeDto perfumeDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
+        perfumeService.savePerfume(perfumeDto, memberId);
 
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeDto));
     }
@@ -65,8 +64,8 @@ public class PerfumeController {
                     schema = @Schema(implementation = PerfumeDto.class)
             )
     )
-    @GetMapping("/detail/{perfumeId}")
-    public ResponseEntity<?> getPerfume(@PathVariable Long perfumeId) {
+    @GetMapping("/{perfumeId}")
+    public ResponseEntity<?> getPerfumeDetails(@PathVariable Long perfumeId) {
         Perfume perfume = perfumeService.findPerfumeById(perfumeId);
         PerfumeDto perfumeDto = PerfumeDto.fromEntity(perfume);
 
@@ -85,9 +84,10 @@ public class PerfumeController {
                     schema = @Schema(implementation = Perfume.class)
             )
     )
-    @GetMapping("/list/{memberId}")
-    public ResponseEntity<?> getMemberPerfume(@PathVariable Long memberId) {
-        List<Perfume> perfumes = perfumeService.findPerfumesByMemberId(memberId);
+    @GetMapping
+    public ResponseEntity<?> getMemberPerfumes(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
+        List<Perfume> perfumes = perfumeService.getMemberPerfumes(memberId);
 
         return ResponseEntity.ok(Response.createSuccess("0000", perfumes));
     }
@@ -104,9 +104,11 @@ public class PerfumeController {
                     schema = @Schema(implementation = Integer.class)
             )
     )
-    @GetMapping("/count/{memberId}")
-    public ResponseEntity<?> getMemberPerfumeCount(@PathVariable Long memberId) {
-        int perfumeCount = perfumeService.countPerfumesByMemberId(memberId);
+    @GetMapping("/count")
+    public ResponseEntity<?> getMemberPerfumeCount(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
+        int perfumeCount = perfumeService.getMemberPerfumeCount(memberId);
+
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeCount));
     }
 
