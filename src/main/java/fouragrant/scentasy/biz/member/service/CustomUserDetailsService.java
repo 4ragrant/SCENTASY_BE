@@ -1,5 +1,6 @@
 package fouragrant.scentasy.biz.member.service;
 
+import fouragrant.scentasy.biz.member.CustomUserDetails;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +22,19 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
     @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return memberRepository.findByEmail(username)
-                .map(this::createUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다."));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일을 가진 회원이 존재하지 않습니다: " + email));
+
+        return createUserDetails(member);
     }
 
     // DB 에 User 값이 존재한다면 UserDetails 객체로 만들어서 리턴
     private UserDetails createUserDetails(Member member) {
         GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(member.getAuthority().toString());
 
-        return new User(
-                //String.valueOf(member.getId()),
+        return new CustomUserDetails(
+                member.getId(),
                 member.getEmail(),
                 member.getPassword(),
                 Collections.singleton(grantedAuthority)

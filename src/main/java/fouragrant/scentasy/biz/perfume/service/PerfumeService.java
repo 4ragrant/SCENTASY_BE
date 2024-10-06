@@ -2,7 +2,9 @@ package fouragrant.scentasy.biz.perfume.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fouragrant.scentasy.biz.member.CustomUserDetails;
 import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
 import fouragrant.scentasy.biz.perfume.repository.PerfumeRepository;
@@ -25,13 +27,14 @@ import static fouragrant.scentasy.biz.member.domain.Scent.SCENT_MAPPING;
 @Slf4j
 public class PerfumeService {
     private final PerfumeRepository perfumeRepository;
+    private final MemberService memberService;
 
     @Value("${flask.url}") // flask.url 프로퍼티를 주입
     private String flaskUrl; // 필드 추가
 
     // 생성된 향수 저장
-    public Perfume savePerfume(PerfumeDto perfumeDto, Member member) {
-        validateMember(member);
+    public Perfume savePerfume(PerfumeDto perfumeDto, Long memberId) {
+        Member member = memberService.findById(memberId);
         Perfume perfume = PerfumeDto.fromDto(perfumeDto, member);
 
         return perfumeRepository.save(perfume);
@@ -44,9 +47,8 @@ public class PerfumeService {
     }
 
     // 멤버 향수 전체 목록 조회
-    public List<Perfume> getMemberPerfumes(Member member) {
-        validateMember(member);
-        List<Perfume> perfumes = perfumeRepository.findByMemberId(member.getId());
+    public List<Perfume> getMemberPerfumes(Long memberId) {
+        List<Perfume> perfumes = perfumeRepository.findByMemberId(memberId);
 
         if (perfumes.isEmpty()) {
             throw new CommonException(ErrorCode.PERFUME_NOT_FOUND);
@@ -56,17 +58,8 @@ public class PerfumeService {
     }
 
     // 멤버 향수 전체 개수 조회
-    public int getMemberPerfumeCount(Member member) {
-        validateMember(member);
-
-        return perfumeRepository.countByMemberId(member.getId());
-    }
-
-    // 멤버 검증
-    private void validateMember(Member member) {
-        if (member == null) {
-            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
-        }
+    public int getMemberPerfumeCount(Long memberId) {
+        return perfumeRepository.countByMemberId(memberId);
     }
 
     public List<String> notesToString() {

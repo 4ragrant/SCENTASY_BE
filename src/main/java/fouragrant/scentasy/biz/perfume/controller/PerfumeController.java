@@ -1,8 +1,6 @@
 package fouragrant.scentasy.biz.perfume.controller;
 
-import fouragrant.scentasy.biz.member.domain.Member;
-import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
-import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
+import fouragrant.scentasy.biz.member.CustomUserDetails;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
@@ -47,8 +45,10 @@ public class PerfumeController {
             )
     )
     @PostMapping
-    public ResponseEntity<?> savePerfume(@RequestBody PerfumeDto perfumeDto, @AuthenticationPrincipal Member member) {
-        perfumeService.savePerfume(perfumeDto, member);
+    public ResponseEntity<?> savePerfume(@RequestBody PerfumeDto perfumeDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
+        perfumeService.savePerfume(perfumeDto, memberId);
+
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeDto));
     }
 
@@ -85,8 +85,10 @@ public class PerfumeController {
             )
     )
     @GetMapping
-    public ResponseEntity<?> getMemberPerfumes(@AuthenticationPrincipal Member member) {
-        List<Perfume> perfumes = perfumeService.getMemberPerfumes(member);
+    public ResponseEntity<?> getMemberPerfumes(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
+        List<Perfume> perfumes = perfumeService.getMemberPerfumes(memberId);
+
         return ResponseEntity.ok(Response.createSuccess("0000", perfumes));
     }
 
@@ -103,8 +105,10 @@ public class PerfumeController {
             )
     )
     @GetMapping("/count")
-    public ResponseEntity<?> getMemberPerfumeCount(@AuthenticationPrincipal Member member) {
-        int perfumeCount = perfumeService.getMemberPerfumeCount(member);
+    public ResponseEntity<?> getMemberPerfumeCount(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
+        int perfumeCount = perfumeService.getMemberPerfumeCount(memberId);
+
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeCount));
     }
 

@@ -1,5 +1,6 @@
 package fouragrant.scentasy.jwt;
 
+import fouragrant.scentasy.biz.member.CustomUserDetails;
 import fouragrant.scentasy.biz.member.dto.TokenDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -10,8 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -43,10 +42,15 @@ public class TokenProvider {
 
             long now = (new Date()).getTime();
 
+            // 멤버 ID 가져오기
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            Long memberId = userDetails.getMemberId();
+
             // Access Token 생성
             Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
             String accessToken = Jwts.builder()
-                    .setSubject(authentication.getName())       // payload "sub": "name"
+                    .setSubject(authentication.getName())
+                    .claim("memberId", memberId)
                     .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
                     .setExpiration(accessTokenExpiresIn)        // payload "exp": 151621022 (ex)
                     .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
@@ -73,6 +77,7 @@ public class TokenProvider {
             // 토큰 복호화
             Claims claims = parseClaims(accessToken);
 
+            // 권한 정보가 없는 경우 예외 처리
             if (claims.get(AUTHORITIES_KEY) == null) {
                 throw new RuntimeException("권한 정보가 없는 토큰입니다.");
             }
@@ -83,10 +88,12 @@ public class TokenProvider {
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
 
-            // UserDetails 객체를 만들어서 Authentication 리턴
-            UserDetails principal = new User(claims.getSubject(), "", authorities);
+            String email = claims.getSubject();
+            Long memberId = Long.parseLong(claims.get("memberId").toString());
 
-            return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+            CustomUserDetails userDetails = new CustomUserDetails(memberId, email, "", authorities);
+
+            return new UsernamePasswordAuthenticationToken(userDetails, "", authorities);
         }
 
         public boolean validateToken(String token) {
