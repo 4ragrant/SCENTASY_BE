@@ -101,7 +101,7 @@ public class PerfumeController {
             description = "Perfume count retrieved successfully!",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = Perfume.class)
+                    schema = @Schema(implementation = Integer.class)
             )
     )
     @GetMapping("/count/{memberId}")
