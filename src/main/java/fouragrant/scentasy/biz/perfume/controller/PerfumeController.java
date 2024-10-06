@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,11 +46,9 @@ public class PerfumeController {
                     schema = @Schema(implementation = PerfumeDto.class)
             )
     )
-    @PostMapping("/save/{memberId}")
-    public ResponseEntity<?> createPerfume(@PathVariable("memberId") Long memberId, @RequestBody PerfumeDto perfumeDto) {
-        Member member = memberService.findById(memberId);
+    @PostMapping
+    public ResponseEntity<?> createPerfume(@RequestBody PerfumeDto perfumeDto, @AuthenticationPrincipal Member member) {
         perfumeService.createPerfume(perfumeDto, member);
-
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeDto));
     }
 
@@ -65,7 +64,7 @@ public class PerfumeController {
                     schema = @Schema(implementation = PerfumeDto.class)
             )
     )
-    @GetMapping("/detail/{perfumeId}")
+    @GetMapping("/{perfumeId}")
     public ResponseEntity<?> getPerfume(@PathVariable Long perfumeId) {
         Perfume perfume = perfumeService.findPerfumeById(perfumeId);
         PerfumeDto perfumeDto = PerfumeDto.fromEntity(perfume);
@@ -85,10 +84,9 @@ public class PerfumeController {
                     schema = @Schema(implementation = Perfume.class)
             )
     )
-    @GetMapping("/list/{memberId}")
-    public ResponseEntity<?> getMemberPerfume(@PathVariable Long memberId) {
-        List<Perfume> perfumes = perfumeService.findPerfumesByMemberId(memberId);
-
+    @GetMapping
+    public ResponseEntity<?> getMemberPerfume(@AuthenticationPrincipal Member member) {
+        List<Perfume> perfumes = perfumeService.findPerfumesByMemberId(member);
         return ResponseEntity.ok(Response.createSuccess("0000", perfumes));
     }
 
@@ -104,9 +102,9 @@ public class PerfumeController {
                     schema = @Schema(implementation = Integer.class)
             )
     )
-    @GetMapping("/count/{memberId}")
-    public ResponseEntity<?> getMemberPerfumeCount(@PathVariable Long memberId) {
-        int perfumeCount = perfumeService.countPerfumesByMemberId(memberId);
+    @GetMapping("/count")
+    public ResponseEntity<?> getMemberPerfumeCount(@AuthenticationPrincipal Member member) {
+        int perfumeCount = perfumeService.countPerfumesByMemberId(member);
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeCount));
     }
 

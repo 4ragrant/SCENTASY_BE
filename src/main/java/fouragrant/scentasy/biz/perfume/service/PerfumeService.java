@@ -2,13 +2,9 @@ package fouragrant.scentasy.biz.perfume.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fouragrant.scentasy.biz.chat.dto.ChatReqDto;
 import fouragrant.scentasy.biz.member.domain.Member;
-import fouragrant.scentasy.biz.member.domain.Scent;
-import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
-import fouragrant.scentasy.biz.perfume.dto.PerfumeNotesDto;
 import fouragrant.scentasy.biz.perfume.repository.PerfumeRepository;
 import fouragrant.scentasy.common.exception.CommonException;
 import fouragrant.scentasy.common.exception.ErrorCode;
@@ -29,11 +25,13 @@ import static fouragrant.scentasy.biz.member.domain.Scent.SCENT_MAPPING;
 @Slf4j
 public class PerfumeService {
     private final PerfumeRepository perfumeRepository;
+
     @Value("${flask.url}") // flask.url 프로퍼티를 주입
     private String flaskUrl; // 필드 추가
 
     // 생성된 향수 저장
     public Perfume createPerfume(PerfumeDto perfumeDto, Member member) {
+        validateMember(member);
         Perfume perfume = PerfumeDto.fromDto(perfumeDto, member);
 
         return perfumeRepository.save(perfume);
@@ -45,20 +43,30 @@ public class PerfumeService {
                 .orElseThrow(() -> new CommonException(ErrorCode.PERFUME_NOT_FOUND));
     }
 
-    // 멤버 ID로 향수 전체 목록 조회
-    public List<Perfume> findPerfumesByMemberId(Long memberId) {
-         List<Perfume> perfumes = perfumeRepository.findByMemberId(memberId);
+    // 멤버 향수 전체 목록 조회
+    public List<Perfume> findPerfumesByMemberId(Member member) {
+        validateMember(member);
+        List<Perfume> perfumes = perfumeRepository.findByMemberId(member.getId());
 
-         if (perfumes.isEmpty()) {
-             throw new CommonException(ErrorCode.PERFUME_NOT_FOUND);
-         }
+        if (perfumes.isEmpty()) {
+            throw new CommonException(ErrorCode.PERFUME_NOT_FOUND);
+        }
 
-         return perfumes;
+        return perfumes;
     }
 
     // 멤버 ID로 향수 전체 개수 조회
-    public int countPerfumesByMemberId(Long memberId) {
-        return perfumeRepository.countByMemberId(memberId);
+    public int countPerfumesByMemberId(Member member) {
+        validateMember(member);
+
+        return perfumeRepository.countByMemberId(member.getId());
+    }
+
+    // 멤버 검증
+    private void validateMember(Member member) {
+        if (member == null) {
+            throw new CommonException(ErrorCode.MEMBER_NOT_FOUND);
+        }
     }
 
     public List<String> notesToString() {
