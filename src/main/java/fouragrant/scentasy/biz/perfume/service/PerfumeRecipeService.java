@@ -3,6 +3,7 @@ package fouragrant.scentasy.biz.perfume.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fouragrant.scentasy.biz.member.domain.Member;
+import fouragrant.scentasy.biz.member.domain.Scent;
 import fouragrant.scentasy.biz.member.repository.MemberRepository;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeRecipeReqDto;
@@ -10,6 +11,8 @@ import fouragrant.scentasy.biz.perfume.dto.PerfumeRecipeResDto;
 import fouragrant.scentasy.biz.perfume.repository.PerfumeRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.yaml.snakeyaml.nodes.ScalarNode;
 
 @Service
 @Slf4j
@@ -42,15 +46,18 @@ public class PerfumeRecipeService {
         Member member = findMemberById(memberId);
         String recipeArray = communicateWithFlask();
 
+        List<Scent> notes = mapRecipeArrayToNotes(recipeArray);
+
         Perfume perfume = Perfume.builder()
                 .recipeArray(recipeArray)
                 .member(member)
+                .notes(notes)
                 .createdAt(LocalDateTime.now())
                 .build();
 
         perfumeRepository.save(perfume);
 
-        return new PerfumeRecipeResDto(recipeArray);
+        return new PerfumeRecipeResDto(notes);
     }
 
     private String communicateWithFlask() {
@@ -86,6 +93,26 @@ public class PerfumeRecipeService {
     private Member findMemberById(Long memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+    }
+
+    private List<Scent> mapRecipeArrayToNotes(String recipeArray) {
+        List<Scent> notes = new ArrayList<>();
+        try {
+            // 문자열을 배열로 변환
+            String[] recipeArrayValues = recipeArray.split(",\s*");
+
+            // 값이 1인 인덱스 찾아서 매핑
+            for (int i = 0; i < recipeArrayValues.length; i++) {
+                if ("1".equals(recipeArrayValues[i])) {
+                    notes.add(Scent.values()[i]);
+                }
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing recipeArray", e);
+        }
+
+        return notes;
     }
 
 }

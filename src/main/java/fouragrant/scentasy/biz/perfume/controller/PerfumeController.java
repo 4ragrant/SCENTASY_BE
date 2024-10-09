@@ -59,7 +59,7 @@ public class PerfumeController {
 
     @Operation(
             summary = "향수 레시피 생성",
-            description = "생성된 향수 레시피 저장을 위한 메소드")
+            description = "생성된 향수 레시피 생성을 위한 메소드, 레시피 노트 5개를 반환합니다.")
     @ApiResponse(
             responseCode = "0000",
             description = "Perfume recipeArray saved successfully!",
@@ -71,7 +71,6 @@ public class PerfumeController {
     @PostMapping("/recipe")
     public ResponseEntity<?> createRecipe(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long memberId = userDetails.getMemberId();
-        log.info("{memberId}");
         PerfumeRecipeResDto perfumeRecipeResDto = perfumeRecipeService.processRecipe(memberId);
 
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeRecipeResDto));
