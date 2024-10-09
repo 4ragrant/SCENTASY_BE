@@ -4,6 +4,8 @@ import fouragrant.scentasy.biz.member.CustomUserDetails;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeDto;
+import fouragrant.scentasy.biz.perfume.dto.PerfumeRecipeResDto;
+import fouragrant.scentasy.biz.perfume.service.PerfumeRecipeService;
 import fouragrant.scentasy.biz.perfume.service.PerfumeService;
 import fouragrant.scentasy.common.Response;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,18 +14,21 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Perfume", description = "향수 관련 API")
 @RestController
 @RequestMapping("/api/perfume")
 @RequiredArgsConstructor
 public class PerfumeController {
     private final PerfumeService perfumeService;
+    private final PerfumeRecipeService perfumeRecipeService;
     private final MemberService memberService;
 
     @Operation(
@@ -50,6 +55,25 @@ public class PerfumeController {
         perfumeService.savePerfume(perfumeDto, memberId);
 
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeDto));
+    }
+
+    @Operation(
+            summary = "향수 레시피 생성",
+            description = "생성된 향수 레시피 생성을 위한 메소드, 레시피 노트 5개를 반환합니다.")
+    @ApiResponse(
+            responseCode = "0000",
+            description = "Perfume recipeArray saved successfully!",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = PerfumeRecipeResDto.class)
+            )
+    )
+    @PostMapping("/recipe")
+    public ResponseEntity<?> createRecipe(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
+        PerfumeRecipeResDto perfumeRecipeResDto = perfumeRecipeService.processRecipe(memberId);
+
+        return ResponseEntity.ok(Response.createSuccess("0000", perfumeRecipeResDto));
     }
 
     @Operation(

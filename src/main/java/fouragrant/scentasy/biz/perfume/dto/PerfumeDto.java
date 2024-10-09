@@ -4,13 +4,16 @@ import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.Scent;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record PerfumeDto(
         String title,
         String description,
         List<String> accords,
-        List<Scent> notes
+        List<Scent> notes,
+
+        LocalDateTime createdAt
 ) {
     // Perfume 엔티티를 PerfumeDto로 변환
     public static PerfumeDto fromEntity(Perfume perfume) {
@@ -18,7 +21,8 @@ public record PerfumeDto(
                 perfume.getTitle(),
                 perfume.getDescription(),
                 perfume.getAccords(),
-                perfume.getNotes()
+                perfume.getNotes(),
+                perfume.getCreatedAt()
         );
     }
 
@@ -30,6 +34,7 @@ public record PerfumeDto(
                 .accords(dto.accords())
                 .notes(dto.notes())
                 .member(member)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 }

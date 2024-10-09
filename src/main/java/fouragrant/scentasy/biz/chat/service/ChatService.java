@@ -40,7 +40,7 @@ public class ChatService {
 
     @Autowired
     public ChatService(ChatRepository chatRepository, MemberRepository memberRepository,
-                       @Value("${flask.url}") String flaskUrl) {
+                       @Value("${flask.chat.url}") String flaskUrl) {
         this.chatRepository = chatRepository;
         this.memberRepository = memberRepository;
         this.flaskUrl = flaskUrl;

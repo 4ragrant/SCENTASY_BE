@@ -29,7 +29,7 @@ public class PerfumeService {
     private final PerfumeRepository perfumeRepository;
     private final MemberService memberService;
 
-    @Value("${flask.url}") // flask.url 프로퍼티를 주입
+    @Value("${flask.chat.url}") // flask.url 프로퍼티를 주입
     private String flaskUrl; // 필드 추가
 
     // 생성된 향수 저장

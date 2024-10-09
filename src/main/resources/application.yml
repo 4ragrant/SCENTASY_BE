@@ -27,6 +27,15 @@ logging:
       fasterxml.jackson: DEBUG
 
 flask:
-  url: ${FLASK_URL}
+  chat:
+    url: ${FLASK_CHAT_URL}
+  recipe:
+    url:
+      ${FLASK_RECIPE_URL}
+
+raspberrypi:
+  ip:
+    ${RASPBERRY_IP}
+
 
 

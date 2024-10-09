@@ -6,9 +6,11 @@ import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.Scent;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.*;
 
 import java.util.List;
+import org.springframework.data.annotation.CreatedDate;
 
 @Entity(name = "perfume")
 @Getter
@@ -33,6 +35,13 @@ public class Perfume extends BaseTimeEntity {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "recipe_array")
+    private String recipeArray;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
