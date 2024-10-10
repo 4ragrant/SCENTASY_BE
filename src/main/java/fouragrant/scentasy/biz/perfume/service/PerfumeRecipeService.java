@@ -72,7 +72,7 @@ public class PerfumeRecipeService {
                 .map(Scent::getDescription)
                 .toList();
 
-        return new PerfumeRecipeResDto(title, description, noteDescriptions, accords);
+        return new PerfumeRecipeResDto(perfume.getPerfumeId(), title, description, noteDescriptions, accords);
     }
 
     private FlaskResponse communicateWithFlask() {
