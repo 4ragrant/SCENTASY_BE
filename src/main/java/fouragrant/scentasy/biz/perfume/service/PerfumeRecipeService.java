@@ -63,7 +63,12 @@ public class PerfumeRecipeService {
 
         perfumeRepository.save(perfume);
 
-        return new PerfumeRecipeResDto(notes, accords);
+        // notes 리스트를 description 값으로 변환
+        List<String> noteDescriptions = notes.stream()
+                .map(Scent::getDescription)
+                .toList();
+
+        return new PerfumeRecipeResDto(noteDescriptions, accords);
     }
 
     private FlaskResponse communicateWithFlask() {
