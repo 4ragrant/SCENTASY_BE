@@ -48,6 +48,8 @@ public class PerfumeRecipeService {
 
         // Flask와 통신하여 JSON 응답을 받아옴
         FlaskResponse responseData = communicateWithFlask();
+        String title = responseData.getTitle();
+        String description = responseData.getDescription();
         String recipeArray = responseData.getPredictedNotes();
         List<Accord> accords = responseData.getPredictedAccords();
 
@@ -56,6 +58,8 @@ public class PerfumeRecipeService {
         Perfume perfume = Perfume.builder()
                 .recipeArray(recipeArray)
                 .member(member)
+                .title(title)
+                .description(description)
                 .accords(accords)
                 .notes(notes)
                 .createdAt(LocalDateTime.now())
@@ -68,7 +72,7 @@ public class PerfumeRecipeService {
                 .map(Scent::getDescription)
                 .toList();
 
-        return new PerfumeRecipeResDto(noteDescriptions, accords);
+        return new PerfumeRecipeResDto(title, description, noteDescriptions, accords);
     }
 
     private FlaskResponse communicateWithFlask() {
@@ -89,7 +93,9 @@ public class PerfumeRecipeService {
                 JsonNode rootNode = objectMapper.readTree(responseBody);
 
                 // JSON 데이터를 파싱하여 FlaskResponse 생성
-                String predictedNotes = rootNode.path("predicted_notes").asText();
+                String title = rootNode.path("title").asText();
+                String description = rootNode.path("description").asText();
+                String notes = rootNode.path("predicted_notes").asText();
                 List<Accord> accords = new ArrayList<>();
 
                 for (JsonNode accordNode : rootNode.path("predicted_accords")) {
@@ -98,7 +104,7 @@ public class PerfumeRecipeService {
                     accords.add(new Accord(accordName, value));
                 }
 
-                return new FlaskResponse(predictedNotes, accords);
+                return new FlaskResponse(title, description, notes, accords);
             } else {
                 throw new RuntimeException("Failed to get a valid response from Flask server");
             }

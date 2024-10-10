@@ -11,6 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FlaskResponse {
+    private String title;
+    private String description;
     private String predictedNotes;
     private List<Accord> predictedAccords;
 }
