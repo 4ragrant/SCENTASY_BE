@@ -32,14 +32,6 @@ public class PerfumeService {
     @Value("${flask.chat.url}") // flask.url 프로퍼티를 주입
     private String flaskUrl; // 필드 추가
 
-    // 생성된 향수 저장
-    public Perfume savePerfume(PerfumeDto perfumeDto, Long memberId) {
-        Member member = memberService.findById(memberId);
-        Perfume perfume = PerfumeDto.fromDto(perfumeDto, member);
-
-        return perfumeRepository.save(perfume);
-    }
-
     // 향수 ID로 향수 상세 정보 조회
     public Perfume findPerfumeById(Long perfumeId) {
         return perfumeRepository.findById(perfumeId)

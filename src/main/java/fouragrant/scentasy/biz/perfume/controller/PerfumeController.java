@@ -32,32 +32,6 @@ public class PerfumeController {
     private final MemberService memberService;
 
     @Operation(
-            summary = "향수 정보 저장",
-            description = "생성된 향수 정보 저장을 위한 메소드")
-    @ApiResponse(
-            responseCode = "0000",
-            description = "Perfume added successfully!",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = PerfumeDto.class)
-            )
-    )
-    @io.swagger.v3.oas.annotations.parameters.RequestBody(
-            description = "향수 생성 요청 본문",
-            required = true,
-            content = @Content(
-                    schema = @Schema(implementation = PerfumeDto.class)
-            )
-    )
-    @PostMapping
-    public ResponseEntity<?> savePerfume(@RequestBody PerfumeDto perfumeDto, @AuthenticationPrincipal CustomUserDetails userDetails) {
-        Long memberId = userDetails.getMemberId();
-        perfumeService.savePerfume(perfumeDto, memberId);
-
-        return ResponseEntity.ok(Response.createSuccess("0000", perfumeDto));
-    }
-
-    @Operation(
             summary = "향수 레시피 생성",
             description = "생성된 향수 레시피 생성을 위한 메소드, 레시피 노트 5개를 반환합니다.")
     @ApiResponse(
@@ -113,7 +87,12 @@ public class PerfumeController {
         Long memberId = userDetails.getMemberId();
         List<Perfume> perfumes = perfumeService.getMemberPerfumes(memberId);
 
-        return ResponseEntity.ok(Response.createSuccess("0000", perfumes));
+        // Perfume 리스트를 PerfumeDto 리스트로 변환
+        List<PerfumeDto> perfumeDtos = perfumes.stream()
+                .map(PerfumeDto::fromEntity)
+                .toList();
+
+        return ResponseEntity.ok(Response.createSuccess("0000", perfumeDtos));
     }
 
     @Operation(
