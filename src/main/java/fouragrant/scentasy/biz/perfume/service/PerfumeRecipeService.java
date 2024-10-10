@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.Scent;
 import fouragrant.scentasy.biz.member.repository.MemberRepository;
+import fouragrant.scentasy.biz.perfume.domain.Accord;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
+import fouragrant.scentasy.biz.perfume.dto.FlaskResponse;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeRecipeReqDto;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeRecipeResDto;
 import fouragrant.scentasy.biz.perfume.repository.PerfumeRepository;
@@ -24,7 +26,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.yaml.snakeyaml.nodes.ScalarNode;
 
 @Service
 @Slf4j
@@ -44,23 +45,28 @@ public class PerfumeRecipeService {
     @Transactional
     public PerfumeRecipeResDto processRecipe(Long memberId) {
         Member member = findMemberById(memberId);
-        String recipeArray = communicateWithFlask();
+
+        // Flask와 통신하여 JSON 응답을 받아옴
+        FlaskResponse responseData = communicateWithFlask();
+        String recipeArray = responseData.getPredictedNotes();
+        List<Accord> accords = responseData.getPredictedAccords();
 
         List<Scent> notes = mapRecipeArrayToNotes(recipeArray);
 
         Perfume perfume = Perfume.builder()
                 .recipeArray(recipeArray)
                 .member(member)
+                .accords(accords)
                 .notes(notes)
                 .createdAt(LocalDateTime.now())
                 .build();
 
         perfumeRepository.save(perfume);
 
-        return new PerfumeRecipeResDto(notes);
+        return new PerfumeRecipeResDto(notes, accords);
     }
 
-    private String communicateWithFlask() {
+    private FlaskResponse communicateWithFlask() {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -68,19 +74,26 @@ public class PerfumeRecipeService {
 
         // 요청 본문 생성
         PerfumeRecipeReqDto perfumeRecipeReqDto = new PerfumeRecipeReqDto("default_session");
-
         HttpEntity<PerfumeRecipeReqDto> entity = new HttpEntity<>(perfumeRecipeReqDto, headers);
+
         try {
             ResponseEntity<String> response = restTemplate.exchange(flaskUrl, HttpMethod.POST, entity, String.class);
             if (response.getStatusCode() == HttpStatus.OK) {
                 String responseBody = response.getBody();
-
-                // JSON scentasy파싱하여 "response" 값만 추출
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode rootNode = objectMapper.readTree(responseBody);
-                JsonNode responseNode = rootNode.path("predicted_notes");
 
-                return responseNode.asText();
+                // JSON 데이터를 파싱하여 FlaskResponse 생성
+                String predictedNotes = rootNode.path("predicted_notes").asText();
+                List<Accord> accords = new ArrayList<>();
+
+                for (JsonNode accordNode : rootNode.path("predicted_accords")) {
+                    String accordName = accordNode.path("accord").asText();
+                    double value = accordNode.path("value").asDouble();
+                    accords.add(new Accord(accordName, value));
+                }
+
+                return new FlaskResponse(predictedNotes, accords);
             } else {
                 throw new RuntimeException("Failed to get a valid response from Flask server");
             }

@@ -53,8 +53,7 @@ public class Perfume extends BaseTimeEntity {
 
     @ElementCollection
     @CollectionTable(name = "perfume_accords", joinColumns = @JoinColumn(name = "perfume_id"))
-    @Column(name = "accords")
-    private List<String> accords;
+    private List<Accord> accords;
 
     @ElementCollection
     @CollectionTable(name = "perfume_notes", joinColumns = @JoinColumn(name = "perfume_id"))

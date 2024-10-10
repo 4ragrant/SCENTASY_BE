@@ -2,6 +2,7 @@ package fouragrant.scentasy.biz.perfume.dto;
 
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.Scent;
+import fouragrant.scentasy.biz.perfume.domain.Accord;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,7 @@ import java.util.List;
 public record PerfumeDto(
         String title,
         String description,
-        List<String> accords,
+        List<Accord> accords,
         List<Scent> notes,
 
         LocalDateTime createdAt
