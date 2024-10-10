@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public record PerfumeDto(
+        Long perfumeId,
         String title,
         String description,
         List<Accord> accords,
@@ -24,6 +25,7 @@ public record PerfumeDto(
                 .toList();
 
         return new PerfumeDto(
+                perfume.getPerfumeId(),
                 perfume.getTitle(),
                 perfume.getDescription(),
                 perfume.getAccords(),
