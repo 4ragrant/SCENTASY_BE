@@ -63,7 +63,7 @@ public class ChatController {
     )
     @PostMapping("/new-session")
     public ResponseEntity<Response<String>> createNewChatSession(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        String sessionId = UUID.randomUUID().toString();
+        String sessionId = chatService.generateNewChatSessionId(userDetails.getMemberId());
         return ResponseEntity.ok(Response.createSuccess("0000", sessionId));
     }
 

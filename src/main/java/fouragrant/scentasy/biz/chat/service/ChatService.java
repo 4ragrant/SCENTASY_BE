@@ -123,4 +123,13 @@ public class ChatService {
                         .build())
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public String generateNewChatSessionId(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+        String nickname = member.getExtraInfo().getNickname();
+        long nextId = chatRepository.countByMemberId(memberId) + 1;
+        return "chat_" + nextId + "_" + nickname;
+    }
 }
