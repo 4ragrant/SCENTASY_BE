@@ -6,19 +6,15 @@ import fouragrant.scentasy.biz.chat.domain.Chat;
 import fouragrant.scentasy.biz.chat.dto.ChatListResDto;
 import fouragrant.scentasy.biz.chat.dto.ChatReqDto;
 import fouragrant.scentasy.biz.chat.dto.ChatResDto;
+import fouragrant.scentasy.biz.chat.dto.ChatSessionListResDto;
 import fouragrant.scentasy.biz.chat.repository.ChatRepository;
 import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
-import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.repository.MemberRepository;
 import jakarta.transaction.Transactional;
-import java.sql.Date;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +43,7 @@ public class ChatService {
     }
 
     @Transactional
-    public ChatResDto processChat(ChatReqDto chatReqDto, Long memberId) {
+    public ChatResDto processChat(ChatReqDto chatReqDto, Long memberId, String sessionId) {
         Member member = findMemberById(memberId);
         ExtraInfo extraInfo = member.getExtraInfo();
 
@@ -58,7 +54,7 @@ public class ChatService {
         }
 
         assert extraInfo != null;
-        ChatReqDto requestWithExtraInfo = new ChatReqDto(chatReqDto.input(), extraInfo.toDto());
+        ChatReqDto requestWithExtraInfo = new ChatReqDto(chatReqDto.input(), extraInfo.toDto(), sessionId);
         log.info("{}", requestWithExtraInfo);
         String response = communicateWithFlask(requestWithExtraInfo);
 
@@ -66,12 +62,13 @@ public class ChatService {
                 .input(chatReqDto.input())
                 .response(response)
                 .member(member)
+                .sessionId(sessionId)
                 .createdAt(LocalDateTime.now())
                 .build();
 
         chatRepository.save(chat);
 
-        return new ChatResDto(response);
+        return new ChatResDto(response, sessionId);
     }
 
     private String communicateWithFlask(ChatReqDto chatReqDto) {
@@ -106,16 +103,9 @@ public class ChatService {
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
     }
 
-    public List<Date> getChatDatesByMemberId(Long memberId) {
-        return chatRepository.findDistinctChatDatesByMemberId(memberId);
-    }
-
     @Transactional
-    public List<ChatListResDto> getChatsByMemberIdAndDate(Long memberId, LocalDate date) {
-        LocalDateTime startOfDay = date.atStartOfDay();
-        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
-
-        return chatRepository.findChatsByMemberIdAndDate(memberId, startOfDay, endOfDay).stream()
+    public List<ChatListResDto> getChatsBySessionIdAndMemberId(String sessionId, Long memberId) {
+        return chatRepository.findChatsBySessionIdAndMemberId(sessionId, memberId).stream()
                 .map(chat -> ChatListResDto.builder()
                         .chatId(chat.getId())
                         .createdAt(chat.getCreatedAt())
@@ -125,6 +115,21 @@ public class ChatService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public List<ChatSessionListResDto> getChatSessionsByMemberId(Long memberId) {
+        return chatRepository.findDistinctSessionIdsByMemberId(memberId).stream()
+                .map(sessionId -> ChatSessionListResDto.builder()
+                        .sessionId(sessionId)
+                        .build())
+                .collect(Collectors.toList());
+    }
 
-
+    @Transactional
+    public String generateNewChatSessionId(Long memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
+        String nickname = member.getExtraInfo().getNickname();
+        long nextId = chatRepository.countByMemberId(memberId) + 1;
+        return "chat_" + nextId + "_" + nickname;
+    }
 }

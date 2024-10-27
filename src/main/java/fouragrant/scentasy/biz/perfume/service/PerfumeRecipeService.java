@@ -43,11 +43,11 @@ public class PerfumeRecipeService {
     }
 
     @Transactional
-    public PerfumeRecipeResDto processRecipe(Long memberId) {
+    public PerfumeRecipeResDto processRecipe(Long memberId, String sessionId) {
         Member member = findMemberById(memberId);
 
         // Flask와 통신하여 JSON 응답을 받아옴
-        FlaskResponse responseData = communicateWithFlask();
+        FlaskResponse responseData = communicateWithFlask(sessionId);
         String title = responseData.getTitle();
         String description = responseData.getDescription();
         String recipeArray = responseData.getPredictedNotes();
@@ -75,14 +75,14 @@ public class PerfumeRecipeService {
         return new PerfumeRecipeResDto(perfume.getPerfumeId(), perfume.getCreatedAt(), title, description, noteDescriptions, accords);
     }
 
-    private FlaskResponse communicateWithFlask() {
+    private FlaskResponse communicateWithFlask(String sessionId) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // 요청 본문 생성
-        PerfumeRecipeReqDto perfumeRecipeReqDto = new PerfumeRecipeReqDto("default_session");
+        PerfumeRecipeReqDto perfumeRecipeReqDto = new PerfumeRecipeReqDto(sessionId);
         HttpEntity<PerfumeRecipeReqDto> entity = new HttpEntity<>(perfumeRecipeReqDto, headers);
 
         try {
@@ -138,5 +138,4 @@ public class PerfumeRecipeService {
 
         return notes;
     }
-
 }

@@ -1,7 +1,9 @@
 package fouragrant.scentasy.biz.chat.dto;
 
-public record ChatResDto(
-        String response,
+import lombok.Builder;
+
+@Builder
+public record ChatSessionListResDto(
         String sessionId
 ) {
 }

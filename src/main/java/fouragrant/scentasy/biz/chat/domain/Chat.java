@@ -45,6 +45,9 @@ public class Chat extends BaseTimeEntity {
     /* -------------------------------------------- */
     /* ------------ Information Column ------------ */
     /* -------------------------------------------- */
+    @Column(nullable = false)
+    private String sessionId;
+
     @Column(name = "input")
     private String input;
 
@@ -54,7 +57,6 @@ public class Chat extends BaseTimeEntity {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
-
     /* -------------------------------------------- */
     /* -------------- Relation Column ------------- */
     /* -------------------------------------------- */
@@ -62,5 +64,4 @@ public class Chat extends BaseTimeEntity {
     @JsonBackReference
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
-
 }

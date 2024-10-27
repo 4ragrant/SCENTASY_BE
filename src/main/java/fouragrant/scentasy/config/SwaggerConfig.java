@@ -19,7 +19,7 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addServersItem(new Server().url("http://43.201.210.211:8080").description("Dev Server"))
+                .addServersItem(new Server().url("http://43.202.191.111:8080").description("Dev Server"))
                 .addServersItem(new Server().url("http://localhost:8080").description("Local Server"));
     }
 }
