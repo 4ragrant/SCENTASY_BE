@@ -12,6 +12,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     List<Chat> findChatsBySessionIdAndMemberId(String sessionId, Long memberId);
+
+    @Query("SELECT DISTINCT c.sessionId FROM chat c WHERE c.member.id = :memberId")
+    List<String> findDistinctSessionIdsByMemberId(Long memberId);
 }
 
 

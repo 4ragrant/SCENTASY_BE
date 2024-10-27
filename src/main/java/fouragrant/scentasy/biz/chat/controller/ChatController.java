@@ -3,6 +3,7 @@ package fouragrant.scentasy.biz.chat.controller;
 import fouragrant.scentasy.biz.chat.dto.ChatListResDto;
 import fouragrant.scentasy.biz.chat.dto.ChatReqDto;
 import fouragrant.scentasy.biz.chat.dto.ChatResDto;
+import fouragrant.scentasy.biz.chat.dto.ChatSessionListResDto;
 import fouragrant.scentasy.biz.chat.service.ChatService;
 import fouragrant.scentasy.biz.member.CustomUserDetails;
 import fouragrant.scentasy.common.Response;
@@ -87,6 +88,22 @@ public class ChatController {
         // 해당 멤버 ID와 세션 ID에 대한 채팅 기록을 조회
         List<ChatListResDto> chats = chatService.getChatsBySessionIdAndMemberId(sessionId, memberId);
         return ResponseEntity.ok(Response.createSuccess("0000", chats));
+    }
+
+    @Operation(summary = "멤버의 채팅 세션 ID 조회", description = "멤버의 채팅 기록이 있는 모든 세션 ID를 조회하는 메소드")
+    @ApiResponse(responseCode = "0000", description = "Successful retrieve chat sessions by member ID",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ChatSessionListResDto.class)
+            )
+    )
+    @GetMapping("/sessions")
+    public ResponseEntity<Response<List<ChatSessionListResDto>>> getChatSessionsByMemberId(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
+
+        List<ChatSessionListResDto> sessions = chatService.getChatSessionsByMemberId(memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000", sessions));
     }
 
 }

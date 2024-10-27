@@ -6,6 +6,7 @@ import fouragrant.scentasy.biz.chat.domain.Chat;
 import fouragrant.scentasy.biz.chat.dto.ChatListResDto;
 import fouragrant.scentasy.biz.chat.dto.ChatReqDto;
 import fouragrant.scentasy.biz.chat.dto.ChatResDto;
+import fouragrant.scentasy.biz.chat.dto.ChatSessionListResDto;
 import fouragrant.scentasy.biz.chat.repository.ChatRepository;
 import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
@@ -113,6 +114,15 @@ public class ChatService {
                         .createdAt(chat.getCreatedAt())
                         .input(chat.getInput())
                         .response(chat.getResponse())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<ChatSessionListResDto> getChatSessionsByMemberId(Long memberId) {
+        return chatRepository.findDistinctSessionIdsByMemberId(memberId).stream()
+                .map(sessionId -> ChatSessionListResDto.builder()
+                        .sessionId(sessionId)
                         .build())
                 .collect(Collectors.toList());
     }
