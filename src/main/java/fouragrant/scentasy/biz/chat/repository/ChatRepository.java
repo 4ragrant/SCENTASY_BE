@@ -12,13 +12,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     List<Chat> findChatsBySessionIdAndMemberId(String sessionId, Long memberId);
-    @Query("SELECT DISTINCT FUNCTION('DATE', c.createdAt) FROM chat c WHERE c.member.id = :memberId")
-    List<Date> findDistinctChatDatesByMemberId(@Param("memberId") Long memberId);
-
-    @Query("SELECT c FROM chat c WHERE c.member.id = :memberId AND c.createdAt BETWEEN :startOfDay AND :endOfDay")
-    List<Chat> findChatsByMemberIdAndDate(@Param("memberId") Long memberId,
-                                                    @Param("startOfDay") LocalDateTime startOfDay,
-                                                    @Param("endOfDay") LocalDateTime endOfDay);
 }
 
 

@@ -89,38 +89,4 @@ public class ChatController {
         return ResponseEntity.ok(Response.createSuccess("0000", chats));
     }
 
-    @Operation(summary = "멤버별 채팅 날짜 리스트 조회", description = "멤버별 채팅 내역이 있는 날짜 조회를 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "Successful retrieve chat dates",
-            content = @Content(
-                    mediaType = "application/json"
-            )
-    )
-    @Parameters({
-            @Parameter(name = "memberId", description = "멤버의 ID, path variable")
-    })
-    @GetMapping("/dates/{memberId}")
-    public ResponseEntity<Response<List<Date>>> getChatDatesByMemberId(@PathVariable Long memberId) {
-        List<java.sql.Date> chatDates = chatService.getChatDatesByMemberId(memberId);
-        return ResponseEntity.ok(Response.createSuccess("0000", chatDates));
-    }
-
-    @Operation(summary = "멤버별 날짜별 채팅 내역 조회", description = "멤버별 날짜별 채팅 내역 조회를 위한 메소드")
-    @ApiResponse(responseCode = "0000", description = "Successful retrieve chat lists",
-            content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ChatListResDto.class)
-            )
-    )
-    @Parameters({
-            @Parameter(name = "memberId", description = "멤버의 ID, path variable"),
-            @Parameter(name = "date", description = "날,, path variable")
-    })
-    @GetMapping("/{memberId}/{date}")
-    public ResponseEntity<Response<List<ChatListResDto>>> getChatsByMemberIdAndDate(@PathVariable Long memberId,
-                                                                                    @PathVariable String date) {
-        LocalDate parsedDate = LocalDate.parse(date);
-        List<ChatListResDto> chats = chatService.getChatsByMemberIdAndDate(memberId, parsedDate);
-        return ResponseEntity.ok(Response.createSuccess("0000", chats));
-    }
-
 }

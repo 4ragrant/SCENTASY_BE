@@ -105,25 +105,6 @@ public class ChatService {
                 .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
     }
 
-    public List<Date> getChatDatesByMemberId(Long memberId) {
-        return chatRepository.findDistinctChatDatesByMemberId(memberId);
-    }
-
-    @Transactional
-    public List<ChatListResDto> getChatsByMemberIdAndDate(Long memberId, LocalDate date) {
-        LocalDateTime startOfDay = date.atStartOfDay();
-        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
-
-        return chatRepository.findChatsByMemberIdAndDate(memberId, startOfDay, endOfDay).stream()
-                .map(chat -> ChatListResDto.builder()
-                        .chatId(chat.getId())
-                        .createdAt(chat.getCreatedAt())
-                        .input(chat.getInput())
-                        .response(chat.getResponse())
-                        .build())
-                .collect(Collectors.toList());
-    }
-
     @Transactional
     public List<ChatListResDto> getChatsBySessionIdAndMemberId(String sessionId, Long memberId) {
         return chatRepository.findChatsBySessionIdAndMemberId(sessionId, memberId).stream()
