@@ -47,9 +47,11 @@ public class ChatController {
     @Parameters({
             @Parameter(name = "memberId", description = "멤버의 ID, path variable")
     })
-    @PostMapping("/{memberId}/{sessionId}")
+    @PostMapping("/{sessionId}")
     public ResponseEntity<?> chat(@RequestBody ChatReqDto chatReqDto,
-                                  @PathVariable Long memberId, @PathVariable String sessionId) {
+                                  @AuthenticationPrincipal CustomUserDetails userDetails,
+                                  @PathVariable String sessionId) {
+            Long memberId = userDetails.getMemberId();
             ChatResDto chatResDto = chatService.processChat(chatReqDto, memberId, sessionId);
             return ResponseEntity.ok(Response.createSuccess("0000", chatResDto));
     }
@@ -80,11 +82,9 @@ public class ChatController {
     public ResponseEntity<Response<List<ChatListResDto>>> getChatsBySessionId(
             @PathVariable String sessionId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        // 로그인된 사용자의 정보를 통해 멤버 ID를 가져옵니다.
         Long memberId = userDetails.getMemberId();
 
-        // 해당 멤버 ID와 세션 ID에 대한 채팅 기록을 조회합니다.
+        // 해당 멤버 ID와 세션 ID에 대한 채팅 기록을 조회
         List<ChatListResDto> chats = chatService.getChatsBySessionIdAndMemberId(sessionId, memberId);
         return ResponseEntity.ok(Response.createSuccess("0000", chats));
     }

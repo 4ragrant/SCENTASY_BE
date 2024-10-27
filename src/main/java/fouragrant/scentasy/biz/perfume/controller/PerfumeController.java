@@ -46,7 +46,6 @@ public class PerfumeController {
     public ResponseEntity<?> createRecipe(@AuthenticationPrincipal CustomUserDetails userDetails, String sessionId) {
         Long memberId = userDetails.getMemberId();
         PerfumeRecipeResDto perfumeRecipeResDto = perfumeRecipeService.processRecipe(memberId, sessionId);
-
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeRecipeResDto));
     }
 
