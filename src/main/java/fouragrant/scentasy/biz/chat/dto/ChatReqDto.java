@@ -7,7 +7,6 @@ import lombok.Builder;
 @Builder
 public record ChatReqDto(
         String input,
-        ExtraInfoReqDto extraInfo
-) {
-
+        ExtraInfoReqDto extraInfo,
+        String sessionId) {
 }

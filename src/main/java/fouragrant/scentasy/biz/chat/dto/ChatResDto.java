@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.chat.dto;
 
 public record ChatResDto(
-        String response
+        String response,
+        String sessionId
 ) {
 }
