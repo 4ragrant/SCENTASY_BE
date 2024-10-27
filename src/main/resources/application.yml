@@ -37,5 +37,10 @@ raspberrypi:
   ip:
     ${RASPBERRY_IP}
 
+aws:
+  ec2:
+    ip:
+      ${EC2_SERVER_IP}
+
 
 
