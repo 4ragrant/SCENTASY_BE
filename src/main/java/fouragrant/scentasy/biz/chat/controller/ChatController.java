@@ -58,7 +58,8 @@ public class ChatController {
     @Operation(summary = "새로운 채팅 생성", description = "새로운 채팅 세션을 생성하는 메소드")
     @ApiResponse(responseCode = "0000", description = "Successful new chat session creation",
             content = @Content(
-                    mediaType = "application/json"
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = String.class)
             )
     )
     @PostMapping("/new-session")
