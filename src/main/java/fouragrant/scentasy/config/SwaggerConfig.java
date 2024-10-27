@@ -6,6 +6,7 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,10 +19,11 @@ import org.springframework.context.annotation.Configuration;
 )
 @Configuration
 public class SwaggerConfig {
+    @Value("${aws.ec2.ip}") String serverIp;
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addServersItem(new Server().url("http://43.202.191.111:8080").description("Dev Server"))
+                .addServersItem(new Server().url("http://"+serverIp+":8080").description("Dev Server"))
                 .addServersItem(new Server().url("http://localhost:8080").description("Local Server"))
                 .components(new Components().addSecuritySchemes("Bearer Token", new SecurityScheme()
                         .type(SecurityScheme.Type.HTTP)
