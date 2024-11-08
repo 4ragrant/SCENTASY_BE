@@ -17,6 +17,7 @@ public class PostMapper {
 
 
         return PostResDto.builder()
+                .postId(post.getId())
                 .perfume(PerfumeDto.fromEntity(perfume))
                 .title(post.getTitle())
                 .content(post.getContent())

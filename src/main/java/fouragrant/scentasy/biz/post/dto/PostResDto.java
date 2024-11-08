@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostResDto {
+    private Long postId;
     private PerfumeDto perfume;
     private String title;
     private String content;
