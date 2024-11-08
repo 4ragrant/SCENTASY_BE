@@ -7,8 +7,14 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
-    @Query("SELECT p FROM Post p LEFT JOIN p.postLikes pl GROUP BY p ORDER BY COUNT(pl) DESC")
-    List<Post> findTop3ByOrderByLikeCountDesc();
+    @Query("""
+        SELECT p 
+        FROM Post p
+        LEFT JOIN p.postLikes pl 
+        GROUP BY p 
+        ORDER BY COUNT(pl) DESC, p.createdAt DESC
+    """)
+    List<Post> findTop3ByOrderByLikeCountDescCreatedAtDesc();
 
     List<Post> findByMemberId(Long memberId);
 }
