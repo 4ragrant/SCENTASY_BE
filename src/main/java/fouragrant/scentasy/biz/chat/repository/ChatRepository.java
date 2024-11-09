@@ -13,7 +13,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     @Query("SELECT DISTINCT c.sessionId FROM chat c WHERE c.member.id = :memberId")
     List<String> findDistinctSessionIdsByMemberId(Long memberId);
 
-    long countByMemberId(Long memberId);
+    List<Chat> findBySessionIdStartingWith(String sessionIdPrefix);
 }
 
 
