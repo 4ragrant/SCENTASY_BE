@@ -126,7 +126,22 @@ public class ChatService {
 
     @Transactional
     public String generateNewChatSessionId(Long memberId) {
-        long nextId = chatRepository.countByMemberId(memberId) + 1;
-        return "chat"+nextId;
+        List<Chat> existingChats = chatRepository.findBySessionIdStartingWith("chat");
+
+        long nextSessionNumber = existingChats.stream()
+                .map(Chat::getSessionId)
+                .filter(sessionId -> sessionId.startsWith("chat"))
+                .mapToInt(sessionId -> {
+                    String numberPart = sessionId.replace("chat", "");
+                    try {
+                        return Integer.parseInt(numberPart);
+                    } catch (NumberFormatException e) {
+                        return 0;
+                    }
+                })
+                .max()
+                .orElse(0);
+
+        return "session" + (nextSessionNumber + 1);
     }
 }
