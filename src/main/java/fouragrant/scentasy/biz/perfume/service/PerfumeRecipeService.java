@@ -4,19 +4,22 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.Scent;
-import fouragrant.scentasy.biz.member.repository.MemberRepository;
+import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Accord;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
 import fouragrant.scentasy.biz.perfume.dto.FlaskResponse;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeRecipeReqDto;
 import fouragrant.scentasy.biz.perfume.dto.PerfumeRecipeResDto;
 import fouragrant.scentasy.biz.perfume.repository.PerfumeRepository;
+import fouragrant.scentasy.common.exception.CommonException;
+import fouragrant.scentasy.common.exception.ErrorCode;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,23 +31,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@RequiredArgsConstructor
 @Slf4j
 public class PerfumeRecipeService {
     private final PerfumeRepository perfumeRepository;
-    private final MemberRepository memberRepository;
-    private final String flaskUrl;
-
-    @Autowired
-    public PerfumeRecipeService(PerfumeRepository perfumeRepository, MemberRepository memberRepository,
-                       @Value("${flask.recipe.url}") String flaskUrl) {
-        this.perfumeRepository = perfumeRepository;
-        this.memberRepository = memberRepository;
-        this.flaskUrl = flaskUrl;
-    }
+    private final MemberService memberService;
+    @Value("${flask.recipe.url}")
+    private String flaskUrl;
 
     @Transactional
     public PerfumeRecipeResDto processRecipe(Long memberId, String sessionId) {
-        Member member = findMemberById(memberId);
+        Member member = memberService.findById(memberId);
+        if (sessionId == null) {
+            throw new CommonException(ErrorCode.MISSING_PARAMETER);
+        }
 
         // Flask와 통신하여 JSON 응답을 받아옴
         FlaskResponse responseData = communicateWithFlask(sessionId);
@@ -112,11 +112,6 @@ public class PerfumeRecipeService {
             log.error("Error communicating with Flask server", e);
             throw new RuntimeException("Error communicating with Flask server", e);
         }
-    }
-
-    private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Member not found with ID: " + memberId));
     }
 
     private List<Scent> mapRecipeArrayToNotes(String recipeArray) {

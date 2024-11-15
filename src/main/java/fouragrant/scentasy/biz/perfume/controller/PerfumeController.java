@@ -43,7 +43,8 @@ public class PerfumeController {
             )
     )
     @PostMapping("/recipe/{sessionId}")
-    public ResponseEntity<?> createRecipe(@AuthenticationPrincipal CustomUserDetails userDetails, String sessionId) {
+    public ResponseEntity<?> createRecipe(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                          @PathVariable String sessionId) {
         Long memberId = userDetails.getMemberId();
         PerfumeRecipeResDto perfumeRecipeResDto = perfumeRecipeService.processRecipe(memberId, sessionId);
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeRecipeResDto));
