@@ -2,8 +2,10 @@ package fouragrant.scentasy.biz.perfume.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.domain.Scent;
+import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Accord;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
@@ -47,7 +49,7 @@ public class PerfumeRecipeService {
         }
 
         // Flask와 통신하여 JSON 응답을 받아옴
-        FlaskResponse responseData = communicateWithFlask(sessionId);
+        FlaskResponse responseData = communicateWithFlask(member, sessionId);
         String title = responseData.getTitle();
         String description = responseData.getDescription();
         String recipeArray = responseData.getPredictedNotes();
@@ -75,14 +77,17 @@ public class PerfumeRecipeService {
         return new PerfumeRecipeResDto(perfume.getPerfumeId(), perfume.getCreatedAt(), title, description, noteDescriptions, accords);
     }
 
-    private FlaskResponse communicateWithFlask(String sessionId) {
+    private FlaskResponse communicateWithFlask(Member member, String sessionId) {
+        ExtraInfo extraInfo = member.getExtraInfo();
+        ExtraInfoReqDto extraInfoReqDto = extraInfo.toDto();
+
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // 요청 본문 생성
-        PerfumeRecipeReqDto perfumeRecipeReqDto = new PerfumeRecipeReqDto(sessionId);
+        PerfumeRecipeReqDto perfumeRecipeReqDto = new PerfumeRecipeReqDto(sessionId, extraInfoReqDto);
         HttpEntity<PerfumeRecipeReqDto> entity = new HttpEntity<>(perfumeRecipeReqDto, headers);
 
         try {
