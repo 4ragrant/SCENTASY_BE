@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.member.dto;
 
 import fouragrant.scentasy.biz.member.domain.*;
+import fouragrant.scentasy.biz.perfume.domain.Scent;
 import lombok.*;
 
 import java.util.List;

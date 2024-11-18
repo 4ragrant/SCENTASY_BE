@@ -2,7 +2,7 @@ package fouragrant.scentasy.biz.member.dto;
 
 import fouragrant.scentasy.biz.member.domain.Age;
 import fouragrant.scentasy.biz.member.domain.Gender;
-import fouragrant.scentasy.biz.member.domain.Scent;
+import fouragrant.scentasy.biz.perfume.domain.Scent;
 import fouragrant.scentasy.biz.member.domain.Season;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;

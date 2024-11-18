@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
-import fouragrant.scentasy.biz.member.domain.Scent;
+import fouragrant.scentasy.biz.perfume.domain.Scent;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Accord;
@@ -50,15 +50,14 @@ public class PerfumeRecipeService {
 
         // Flask와 통신하여 JSON 응답을 받아옴
         FlaskResponse responseData = communicateWithFlask(member, sessionId);
+
         String title = responseData.getTitle();
         String description = responseData.getDescription();
-        String recipeArray = responseData.getPredictedNotes();
+        List<Scent> notes = responseData.getPredictedNotes();
         List<Accord> accords = responseData.getPredictedAccords();
 
-        List<Scent> notes = mapRecipeArrayToNotes(recipeArray);
-
         Perfume perfume = Perfume.builder()
-                .recipeArray(recipeArray)
+//                .recipeArray(recipeArray)
                 .member(member)
                 .title(title)
                 .description(description)
@@ -100,9 +99,21 @@ public class PerfumeRecipeService {
                 // JSON 데이터를 파싱하여 FlaskResponse 생성
                 String title = rootNode.path("title").asText();
                 String description = rootNode.path("description").asText();
-                String notes = rootNode.path("predicted_notes").asText();
-                List<Accord> accords = new ArrayList<>();
 
+                // predicted_notes 매핑
+                List<Scent> notes = new ArrayList<>();
+                for (JsonNode noteNode : rootNode.path("predicted_notes")) {
+                    String scentName = noteNode.asText();
+                    try {
+                        Scent scent = Scent.valueOf(scentName);
+                        notes.add(scent);
+                    } catch (IllegalArgumentException e) {
+                        log.warn("Unknown scent received from Flask: {}", scentName);
+                    }
+                }
+
+                // predicted_accords 매핑
+                List<Accord> accords = new ArrayList<>();
                 for (JsonNode accordNode : rootNode.path("predicted_accords")) {
                     String accordName = accordNode.path("accord").asText();
                     double value = accordNode.path("value").asDouble();
@@ -117,25 +128,5 @@ public class PerfumeRecipeService {
             log.error("Error communicating with Flask server", e);
             throw new RuntimeException("Error communicating with Flask server", e);
         }
-    }
-
-    private List<Scent> mapRecipeArrayToNotes(String recipeArray) {
-        List<Scent> notes = new ArrayList<>();
-        try {
-            // 문자열을 배열로 변환
-            String[] recipeArrayValues = recipeArray.split(",\s*");
-
-            // 값이 1인 인덱스 찾아서 매핑
-            for (int i = 0; i < recipeArrayValues.length; i++) {
-                if ("1".equals(recipeArrayValues[i])) {
-                    notes.add(Scent.values()[i]);
-                }
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error parsing recipeArray", e);
-        }
-
-        return notes;
     }
 }

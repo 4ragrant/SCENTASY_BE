@@ -3,7 +3,6 @@ package fouragrant.scentasy.biz.perfume.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import fouragrant.scentasy.biz.calendar.domain.Memo;
 import fouragrant.scentasy.biz.member.domain.Member;
-import fouragrant.scentasy.biz.member.domain.Scent;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -36,8 +35,8 @@ public class Perfume extends BaseTimeEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "recipe_array")
-    private String recipeArray;
+//    @Column(name = "recipe_array")
+//    private String recipeArray;
 
     @CreatedDate
     @Column(updatable = false)
