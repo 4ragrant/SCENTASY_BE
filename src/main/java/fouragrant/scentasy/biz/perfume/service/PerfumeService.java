@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fouragrant.scentasy.biz.member.service.MemberService;
 import fouragrant.scentasy.biz.perfume.domain.Perfume;
+import fouragrant.scentasy.biz.perfume.domain.Accord;
+import fouragrant.scentasy.biz.perfume.dto.AccordStatisticsResDto;
 import fouragrant.scentasy.biz.perfume.repository.PerfumeRepository;
 import fouragrant.scentasy.common.exception.CommonException;
 import fouragrant.scentasy.common.exception.ErrorCode;
@@ -16,6 +18,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import static fouragrant.scentasy.biz.member.domain.Scent.SCENT_MAPPING;
 
@@ -92,5 +97,26 @@ public class PerfumeService {
             log.error("Error communicating with Flask server", e);
             throw new RuntimeException("Error communicating with Flask server", e);
         }
+    }
+
+    public List<AccordStatisticsResDto> getMemberAccordStatistics(Long memberId) {
+        List<Object[]> results = perfumeRepository.findAccordStatisticsByMemberId(memberId);
+
+        // 결과가 없으면 예외 발생
+        if (results.isEmpty()) {
+            throw new CommonException(ErrorCode.PERFUME_NOT_FOUND);
+        }
+
+        // 결과를 DTO 리스트로 변환
+        List<AccordStatisticsResDto> accordStatistics = results.stream()
+                .map(result -> new AccordStatisticsResDto((String) result[0], (Long) result[1]))
+                .toList();
+
+        // 어코드가 7개 이하로 제한
+        if (accordStatistics.size() > 7) {
+            accordStatistics = accordStatistics.subList(0, 7);
+        }
+
+        return accordStatistics;
     }
 }

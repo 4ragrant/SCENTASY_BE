@@ -6,6 +6,9 @@ import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoResDto;
 import fouragrant.scentasy.biz.member.service.ExtraInfoService;
 import fouragrant.scentasy.biz.member.service.MemberService;
+import fouragrant.scentasy.biz.perfume.domain.Perfume;
+import fouragrant.scentasy.biz.perfume.dto.AccordStatisticsResDto;
+import fouragrant.scentasy.biz.perfume.service.PerfumeService;
 import fouragrant.scentasy.common.Response;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +22,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Tag(name = "MyPage", description = "My Page 관련 API")
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 public class MypageController {
     private final ExtraInfoService extraInfoService;
     private final MemberService memberService;
+    private final PerfumeService perfumeService;
 
     @Operation(
             summary = "멤버 정보 조회",
@@ -75,5 +83,26 @@ public class MypageController {
         ExtraInfo updatedExtraInfo = extraInfoService.updateExtraInfo(memberId, extraInfoReqDto, member);
 
         return ResponseEntity.ok(Response.createSuccess("0000", ExtraInfoResDto.of(member, updatedExtraInfo)));
+    }
+
+    @Operation(
+            summary = "멤버별 향수 어코드 통계 조회 API",
+            description = "멤버별 향수 어코드 통계를 조회하는 메소드"
+    )
+    @ApiResponse(
+            responseCode = "0000",
+            description = "getting Member's accord statistics successfully!",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExtraInfoResDto.class)
+            )
+    )
+    @Parameters({
+            @Parameter(name = "memberId", description = "멤버의 ID, path variable", required = true, example = "1")
+    })
+    @GetMapping("/{memberId}/accord-statistics")
+    public ResponseEntity<?> getMemberAccord (@PathVariable Long memberId) {
+        List<AccordStatisticsResDto> responseDto = perfumeService.getMemberAccordStatistics(memberId);
+        return ResponseEntity.ok(Response.createSuccess("0000", responseDto));
     }
 }
