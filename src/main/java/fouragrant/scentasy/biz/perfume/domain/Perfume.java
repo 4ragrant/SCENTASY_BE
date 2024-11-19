@@ -35,8 +35,8 @@ public class Perfume extends BaseTimeEntity {
     @Column(name = "description")
     private String description;
 
-//    @Column(name = "recipe_array")
-//    private String recipeArray;
+    @Column(name = "recipe_array")
+    private String recipeArray;
 
     @CreatedDate
     @Column(updatable = false)

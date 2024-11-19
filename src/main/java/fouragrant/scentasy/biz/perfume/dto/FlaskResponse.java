@@ -14,6 +14,7 @@ import java.util.List;
 public class FlaskResponse {
     private String title;
     private String description;
+    private String recipeArray;
     private List<Scent> predictedNotes;
     private List<Accord> predictedAccords;
 }

@@ -53,11 +53,12 @@ public class PerfumeRecipeService {
 
         String title = responseData.getTitle();
         String description = responseData.getDescription();
+        String recipeArray = responseData.getRecipeArray();
         List<Scent> notes = responseData.getPredictedNotes();
         List<Accord> accords = responseData.getPredictedAccords();
 
         Perfume perfume = Perfume.builder()
-//                .recipeArray(recipeArray)
+                .recipeArray(recipeArray)
                 .member(member)
                 .title(title)
                 .description(description)
@@ -99,6 +100,7 @@ public class PerfumeRecipeService {
                 // JSON 데이터를 파싱하여 FlaskResponse 생성
                 String title = rootNode.path("title").asText();
                 String description = rootNode.path("description").asText();
+                String recipeArray = rootNode.path("binary_note_recipe").asText();
 
                 // predicted_notes 매핑
                 List<Scent> notes = new ArrayList<>();
@@ -120,7 +122,7 @@ public class PerfumeRecipeService {
                     accords.add(new Accord(accordName, value));
                 }
 
-                return new FlaskResponse(title, description, notes, accords);
+                return new FlaskResponse(title, description, recipeArray, notes, accords);
             } else {
                 throw new RuntimeException("Failed to get a valid response from Flask server");
             }
