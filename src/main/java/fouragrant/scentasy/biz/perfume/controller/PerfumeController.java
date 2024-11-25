@@ -114,22 +114,4 @@ public class PerfumeController {
 
         return ResponseEntity.ok(Response.createSuccess("0000", perfumeCount));
     }
-
-//    @Operation(
-//            summary = "향수 레시피 출력값 스트링 변경",
-//            description = "향수 레시피 출력값 스트링 변경을 위한 메소드"
-//    )
-//    @ApiResponse(
-//            responseCode = "0000",
-//            description = "Perfume recipe changes to string successfully!",
-//            content = @Content(
-//                    mediaType = "application/json",
-//                    schema = @Schema(implementation = Perfume.class)
-//            )
-//    )
-//    @GetMapping("/notes-to-string")
-//    public ResponseEntity<?> notesToString() {
-//        List<String> perfumeNotes = perfumeService.notesToString();
-//        return ResponseEntity.ok(Response.createSuccess("0000", perfumeNotes));
-//    }
 }
