@@ -1,6 +1,7 @@
 package fouragrant.scentasy.biz.member.domain;
 
 import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
+import fouragrant.scentasy.biz.perfume.domain.Scent;
 import fouragrant.scentasy.common.dto.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
