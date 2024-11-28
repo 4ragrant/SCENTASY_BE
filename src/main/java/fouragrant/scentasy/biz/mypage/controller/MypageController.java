@@ -1,5 +1,6 @@
 package fouragrant.scentasy.biz.mypage.controller;
 
+import fouragrant.scentasy.biz.member.CustomUserDetails;
 import fouragrant.scentasy.biz.member.domain.ExtraInfo;
 import fouragrant.scentasy.biz.member.domain.Member;
 import fouragrant.scentasy.biz.member.dto.ExtraInfoReqDto;
@@ -19,6 +20,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,14 +96,12 @@ public class MypageController {
             description = "getting Member's accord statistics successfully!",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ExtraInfoResDto.class)
+                    schema = @Schema(implementation = AccordStatisticsResDto.class)
             )
     )
-    @Parameters({
-            @Parameter(name = "memberId", description = "멤버의 ID, path variable", required = true, example = "1")
-    })
-    @GetMapping("/{memberId}/accord-statistics")
-    public ResponseEntity<?> getMemberAccord (@PathVariable Long memberId) {
+    @GetMapping("/accord-statistics")
+    public ResponseEntity<?> getMemberAccord (@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long memberId = userDetails.getMemberId();
         List<AccordStatisticsResDto> responseDto = perfumeService.getMemberAccordStatistics(memberId);
         return ResponseEntity.ok(Response.createSuccess("0000", responseDto));
     }
